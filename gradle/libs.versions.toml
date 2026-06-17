@@ -8,6 +8,10 @@ appcompat = "1.7.1"
 material = "1.14.0"
 activityKtx = "1.13.0"
 constraintlayout = "2.2.1"
+camerax = "1.4.1"
+recyclerview = "1.4.0"
+zxing = "3.5.3"
+mlkit-barcode-scanning = "17.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -18,6 +22,12 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-camera-camera2 = {group = "androidx.camera",name = "camera-camera2",version.ref = "camerax"}
+androidx-camera-lifecycle = {group = "androidx.camera",name = "camera-lifecycle",version.ref = "camerax"}
+androidx-camera-view = {group = "androidx.camera",name = "camera-view",version.ref = "camerax"}
+androidx-recyclerview = {group = "androidx.recyclerview",name = "recyclerview",version.ref="recyclerview"}
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+mlkit-barcode-scanning = {group = "com.google.mlkit",name = "barcode-scanning",version.ref = "mlkit-barcode-scanning"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
