@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">DONGZHOU</string>
+
+    <!--  底部边栏   -->
+    <string name="bottom_bar_scan">Scan</string>
+    <string name="bottom_bar_history">History</string>
+    <string name="bottom_bar_create">Create</string>
+    <string name="bottom_bar_setting">Setting</string>
+
 </resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_bottom_bar"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_bottom_bar"
+    android:elevation="8dp"
+    android:gravity="center"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <!-- Scan -->
+    <LinearLayout
+        android:id="@+id/bottom_scan"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/icon_scan"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@mipmap/ic_scan"/>
+
+        <TextView
+            android:id="@+id/text_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:text="@string/bottom_bar_scan"
+            android:textColor="@color/bottom_bar_text"/>
+
+    </LinearLayout>
+
+    <!-- History -->
+    <LinearLayout
+        android:id="@+id/bottom_history"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/icon_history"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@mipmap/ic_history"/>
+
+        <TextView
+            android:id="@+id/text_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:text="@string/bottom_bar_history"
+            android:textColor="@color/bottom_bar_text"/>
+
+    </LinearLayout>
+
+    <!-- Create -->
+    <LinearLayout
+        android:id="@+id/bottom_create"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/icon_create"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@mipmap/ic_create" />
+
+        <TextView
+            android:id="@+id/text_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:text="@string/bottom_bar_create"
+            android:textColor="@color/bottom_bar_text"/>
+
+    </LinearLayout>
+
+    <!-- Setting -->
+    <LinearLayout
+        android:id="@+id/bottom_setting"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/icon_setting"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@mipmap/ic_setting"/>
+
+        <TextView
+            android:id="@+id/text_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:text="@string/bottom_bar_setting"
+            android:textColor="@color/bottom_bar_text"/>
+
+    </LinearLayout>
+
+</LinearLayout>
