@@ -23,7 +23,7 @@
     <string name="facebook_input_hint">Enter Facebook ID</string>
     <string name="ca_open">OPEN</string>
 
-<!--    创建website Activity-->
+    <!--    创建website Activity-->
     <string name="website_input_hint">Enter URL</string>
 
 </resources>
