@@ -8,7 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.swx.dongzhou.Activities.CreateActivities.FaceBookCreateActivity
+import com.swx.dongzhou.Activities.CreateActivities.CommonCreateActivity
+import com.swx.dongzhou.Activities.CreateActivities.CreatePageConfigs
 import com.swx.dongzhou.R
 
 class CreateAdapter(val context: FragmentActivity?, val itemList: List<CreateItem>) : RecyclerView.Adapter<CreateAdapter.ViewHolder>(){
@@ -27,7 +28,8 @@ class CreateAdapter(val context: FragmentActivity?, val itemList: List<CreateIte
         holder.itemName.text=itemList[position].name
         holder.itemImage.setImageResource(getItemImage(itemList[position]))
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, FaceBookCreateActivity::class.java)
+            val intent = Intent(context, CommonCreateActivity::class.java)
+            intent.putExtra(CreatePageConfigs.EXTRA_CREATE_TYPE, itemList[position].type.name)
             context?.startActivity(intent)
         }
     }
