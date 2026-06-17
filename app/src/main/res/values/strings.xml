@@ -7,7 +7,7 @@
     <string name="bottom_bar_create">Create</string>
     <string name="bottom_bar_setting">Setting</string>
 
-<!--    创建-->
+    <!--    创建-->
     <string name="website">Website</string>
     <string name="wifi">WIFI</string>
     <string name="text">Text</string>
@@ -17,5 +17,10 @@
     <string name="sms">SMS</string>
     <string name="calendar">Calendar</string>
     <string name="mycard">My Card</string>
+    
+<!--    创建facebook Activity-->
+    <string name="ca_create">Create</string>
+    <string name="facebook_input_hint">Enter Facebook ID</string>
+    <string name="ca_open">OPEN</string>
 
 </resources>
