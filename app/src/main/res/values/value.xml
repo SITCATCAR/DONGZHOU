@@ -3,5 +3,7 @@
     <dimen name="create_item_width">90dp</dimen>
     <dimen name="create_item_height">93dp</dimen>
     <dimen name="create_item_bg_height">68dp</dimen>
+    
+    <dimen name="radius">8dp</dimen>
 
 </resources>

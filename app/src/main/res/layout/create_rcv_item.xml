@@ -24,8 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/image_create_icon"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/createImg"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:src="@mipmap/ic_youtobe"
@@ -37,13 +37,13 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/text_create_name"
+        android:id="@+id/createName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="Youtube"
         android:textSize="12sp"
-        android:textColor="@color/create_rcv_item_text"
+        android:textColor="@color/black_text"
         android:gravity="center"
         android:maxLines="1" />
 

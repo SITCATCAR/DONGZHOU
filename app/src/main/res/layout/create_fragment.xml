@@ -74,13 +74,11 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/text_history_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="›"
-                    android:textColor="#9CA3AF"
-                    android:textSize="28sp" />
+                    android:src="@mipmap/ic_check" />
 
             </LinearLayout>
 
@@ -137,28 +135,24 @@
 
                 </LinearLayout>
 
-                <TextView
+                <ImageView
                     android:id="@+id/text_clipboard_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="›"
-                    android:textColor="#9CA3AF"
-                    android:textSize="28sp" />
+                    android:src="@mipmap/ic_check"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_create_type_container"
                 android:layout_width="0dp"
-                android:layout_height="220dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@drawable/bg_create_card"
                 app:layout_constraintTop_toBottomOf="@id/layout_clipboard_entry"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RCView"
                     android:layout_width="match_parent"
@@ -195,13 +189,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
+                    android:textStyle="bold"
                     android:text="Use Share option from other apps"
                     android:textColor="@color/black_text"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
-            <!-- 反馈文字 -->
             <TextView
                 android:id="@+id/text_feedback"
                 android:layout_width="wrap_content"

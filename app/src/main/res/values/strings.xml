@@ -7,4 +7,15 @@
     <string name="bottom_bar_create">Create</string>
     <string name="bottom_bar_setting">Setting</string>
 
+<!--    创建-->
+    <string name="website">Website</string>
+    <string name="wifi">WIFI</string>
+    <string name="text">Text</string>
+    <string name="contact">Contact</string>
+    <string name="tel">Tel</string>
+    <string name="email">E-mail</string>
+    <string name="sms">SMS</string>
+    <string name="calendar">Calendar</string>
+    <string name="mycard">My Card</string>
+
 </resources>
