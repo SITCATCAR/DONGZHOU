@@ -153,6 +153,7 @@
                 app:layout_constraintTop_toBottomOf="@id/layout_clipboard_entry"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RCView"
                     android:layout_width="match_parent"
