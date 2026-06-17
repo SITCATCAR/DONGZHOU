@@ -17,10 +17,13 @@
     <string name="sms">SMS</string>
     <string name="calendar">Calendar</string>
     <string name="mycard">My Card</string>
-    
-<!--    创建facebook Activity-->
+
+    <!--    创建facebook Activity-->
     <string name="ca_create">Create</string>
     <string name="facebook_input_hint">Enter Facebook ID</string>
     <string name="ca_open">OPEN</string>
+
+<!--    创建website Activity-->
+    <string name="website_input_hint">Enter URL</string>
 
 </resources>

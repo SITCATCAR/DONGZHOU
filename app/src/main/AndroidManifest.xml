@@ -25,6 +25,10 @@
             android:name=".Activities.CreateActivities.FaceBookCreateActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activities.CreateActivities.WebsiteCreateActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
