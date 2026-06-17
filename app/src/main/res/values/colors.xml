@@ -3,5 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="bottom_bar_text">#7F88A1</color>
+    <color name="gray_text">#7F88A1</color>
+    
+    <color name="black_text">#171718</color>
 </resources>

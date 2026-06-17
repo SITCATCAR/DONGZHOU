@@ -35,7 +35,7 @@
             android:layout_marginTop="4dp"
             android:textSize="12sp"
             android:text="@string/bottom_bar_scan"
-            android:textColor="@color/bottom_bar_text"/>
+            android:textColor="@color/gray_text"/>
 
     </LinearLayout>
 
@@ -64,7 +64,7 @@
             android:layout_marginTop="4dp"
             android:textSize="12sp"
             android:text="@string/bottom_bar_history"
-            android:textColor="@color/bottom_bar_text"/>
+            android:textColor="@color/black_text"/>
 
     </LinearLayout>
 
@@ -93,7 +93,7 @@
             android:layout_marginTop="4dp"
             android:textSize="12sp"
             android:text="@string/bottom_bar_create"
-            android:textColor="@color/bottom_bar_text"/>
+            android:textColor="@color/gray_text"/>
 
     </LinearLayout>
 
@@ -122,7 +122,7 @@
             android:layout_marginTop="4dp"
             android:textSize="12sp"
             android:text="@string/bottom_bar_setting"
-            android:textColor="@color/bottom_bar_text"/>
+            android:textColor="@color/black_text"/>
 
     </LinearLayout>
 

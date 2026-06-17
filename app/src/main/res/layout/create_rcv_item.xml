@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_create_item"
+    android:layout_width="@dimen/create_item_width"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackgroundBorderless">
+
+    <LinearLayout
+        android:id="@+id/layout_icon_bg"
+        android:layout_width="@dimen/create_item_width"
+        android:layout_height="@dimen/create_item_bg_height"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/bg_create_rcv_item">
+
+        <FrameLayout
+            android:id="@+id/iconHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_create_icon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@mipmap/ic_youtobe"
+                android:scaleType="centerInside" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_create_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Youtube"
+        android:textSize="12sp"
+        android:textColor="@color/create_rcv_item_text"
+        android:gravity="center"
+        android:maxLines="1" />
+
+</LinearLayout>
