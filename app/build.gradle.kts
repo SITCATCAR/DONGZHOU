@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -52,4 +53,8 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.zxing.core)
     implementation(libs.mlkit.barcode.scanning)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+
+    ksp(libs.androidx.room.compiler)
 }

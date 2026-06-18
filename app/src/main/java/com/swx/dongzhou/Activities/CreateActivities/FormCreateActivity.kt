@@ -1,5 +1,6 @@
 package com.swx.dongzhou.Activities.CreateActivities
 
+import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import com.swx.dongzhou.Activities.CreateResultActivity
 import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.databinding.ActivityFormCreateBinding
 import com.swx.dongzhou.pages.createPage.CreateItemType
@@ -265,7 +267,11 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
             switches = switchValues
         )
         //TODO 创建二维码
-        Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, CreateResultActivity::class.java).apply {
+            putExtra("type",config.type.name)
+            putExtra("content",content)
+        }
+        startActivity(intent)
     }
 
     private fun collectValues(): Map<String, String> {

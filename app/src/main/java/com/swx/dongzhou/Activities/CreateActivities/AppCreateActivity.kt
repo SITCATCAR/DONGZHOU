@@ -118,7 +118,6 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
             switches = emptyMap()
         )
         //TODO 创建二维码
-        Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
         val intent = Intent(this, CreateResultActivity::class.java).apply {
             putExtra("type",config.type.name)
             putExtra("content",content)
