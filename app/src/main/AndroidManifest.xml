@@ -22,7 +22,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.CreateActivities.CommonCreateActivity"
+            android:name=".Activities.CreateActivities.AppCreateActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activities.CreateActivities.FormCreateActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>
