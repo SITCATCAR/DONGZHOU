@@ -77,12 +77,11 @@ class CommonCreateActivity : BaseActivity<ActivityCommonCreateBinding>(
         updateAppHint()
 
         binding.tvPrefixWww.setOnClickListener {
-            binding.etAppInput.setText("www")
-            binding.etAppInput.setSelection(binding.etAppInput.text.length)
+            addPrefix(binding.etAppInput, "www.")
         }
 
         binding.tvSuffixCom.setOnClickListener {
-            binding.etAppInput.append(".com")
+            addSuffix(binding.etAppInput, ".com")
         }
     }
 
@@ -138,6 +137,10 @@ class CommonCreateActivity : BaseActivity<ActivityCommonCreateBinding>(
             fieldView.visibility = if (field.visibleOnStart) View.VISIBLE else View.GONE
             fieldViews[field.key] = fieldView
             binding.layoutForm.addView(fieldView)
+        }
+
+        if (config.showQuickText) {
+            binding.layoutForm.addView(createQuickTextRow(editTexts["url"]))
         }
 
         initFormSpecialActions()
@@ -383,6 +386,44 @@ class CommonCreateActivity : BaseActivity<ActivityCommonCreateBinding>(
         return row
     }
 
+    private fun createQuickTextRow(targetEditText: EditText?): LinearLayout {
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(0, dp(6), 0, dp(14))
+
+            addView(createQuickTextView("www.").apply {
+                setOnClickListener {
+                    targetEditText?.let { editText ->
+                        addPrefix(editText, "www.")
+                    }
+                }
+            })
+
+            addView(createQuickTextView(".com").apply {
+                val params = LinearLayout.LayoutParams(dp(96), dp(34))
+                params.marginStart = dp(10)
+                layoutParams = params
+                setOnClickListener {
+                    targetEditText?.let { editText ->
+                        addSuffix(editText, ".com")
+                    }
+                }
+            })
+        }
+    }
+
+    private fun createQuickTextView(textValue: String): TextView {
+        return TextView(this).apply {
+            text = textValue
+            gravity = Gravity.CENTER
+            background = ContextCompat.getDrawable(this@CommonCreateActivity, R.drawable.bg_input)
+            setTextColor(color(R.color.black_text))
+            textSize = 16f
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            layoutParams = LinearLayout.LayoutParams(dp(96), dp(34))
+        }
+    }
+
     private fun createIcon(iconRes: Int): AppCompatImageView {
         return AppCompatImageView(this).apply {
             setImageResource(iconRes)
@@ -407,6 +448,28 @@ class CommonCreateActivity : BaseActivity<ActivityCommonCreateBinding>(
             if (textValues["security"]?.text.toString() == "None") View.GONE else View.VISIBLE
     }
 
+    private fun addPrefix(editText: EditText, prefix: String) {
+        val currentText = editText.text.toString()
+        if (currentText.startsWith(prefix)) {
+            editText.setSelection(editText.text.length)
+            return
+        }
+
+        editText.setText(prefix + currentText)
+        editText.setSelection(editText.text.length)
+    }
+
+    private fun addSuffix(editText: EditText, suffix: String) {
+        val currentText = editText.text.toString()
+        if (currentText.endsWith(suffix)) {
+            editText.setSelection(editText.text.length)
+            return
+        }
+
+        editText.setText(currentText + suffix)
+        editText.setSelection(editText.text.length)
+    }
+
     private fun handleCreate() {
         val values = collectValues()
         val switchValues = switches.mapValues { entry -> entry.value.isChecked }
@@ -429,6 +492,7 @@ class CommonCreateActivity : BaseActivity<ActivityCommonCreateBinding>(
             values = values,
             switches = switchValues
         )
+        //TODO 创建二维码
         Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
     }
 

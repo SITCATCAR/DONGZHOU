@@ -46,11 +46,12 @@ object CreatePageConfigs {
                 type = type,
                 title = "Website",
                 iconRes = R.mipmap.ic_url,
+                showQuickText = true,
                 fields = listOf(
                     CreateFieldConfig(
                         key = "url",
                         hint = "Enter URL",
-                        iconRes = R.mipmap.ic_url,
+                        iconRes = R.mipmap.ic_url_unselected,
                         required = true
                     )
                 )
@@ -64,7 +65,7 @@ object CreatePageConfigs {
                     CreateFieldConfig(
                         key = "wifiName",
                         hint = "Network name",
-                        iconRes = R.mipmap.ic_wifi,
+                        iconRes = R.mipmap.ic_wifi_unselected,
                         required = true
                     ),
                     CreateFieldConfig(
@@ -91,7 +92,6 @@ object CreatePageConfigs {
                     CreateFieldConfig(
                         key = "text",
                         hint = "Enter text",
-                        iconRes = R.mipmap.ic_text,
                         type = CreateFieldType.TEXT_COUNTER,
                         required = true
                     )
@@ -128,7 +128,7 @@ object CreatePageConfigs {
                 title = "E-mail",
                 iconRes = R.mipmap.ic_email,
                 fields = listOf(
-                    CreateFieldConfig("email", "E-mail", iconRes = R.mipmap.ic_email, required = true),
+                    CreateFieldConfig("email", "E-mail", iconRes = R.mipmap.ic_email_unselected, required = true),
                     CreateFieldConfig("subject", "Subject", label = "Subject", visibleOnStart = false),
                     CreateFieldConfig(
                         key = "content",
@@ -186,7 +186,7 @@ object CreatePageConfigs {
                 fields = listOf(
                     CreateFieldConfig("name", "Name", iconRes = R.mipmap.ic_create_name, required = true),
                     CreateFieldConfig("phone", "Phone number", iconRes = R.mipmap.ic_create_phone),
-                    CreateFieldConfig("email", "E-mail", iconRes = R.mipmap.ic_email),
+                    CreateFieldConfig("email", "E-mail", iconRes = R.mipmap.ic_email_unselected),
                     CreateFieldConfig("address", "Address", iconRes = R.mipmap.ic_create_address),
                     CreateFieldConfig("birthday", label = "Birthday", type = CreateFieldType.TIME, defaultValue = "Jan 8"),
                     CreateFieldConfig("org", "Organization", iconRes = R.mipmap.ic_create_org),
@@ -325,13 +325,15 @@ object CreatePageConfigs {
         type: CreateItemType,
         title: String,
         iconRes: Int,
-        fields: List<CreateFieldConfig>
+        fields: List<CreateFieldConfig>,
+        showQuickText: Boolean = false
     ): CreatePageConfig {
         return CreatePageConfig(
             type = type,
             title = title,
             mode = CreatePageMode.FORM,
             iconRes = iconRes,
+            showQuickText = showQuickText,
             fields = fields
         )
     }
