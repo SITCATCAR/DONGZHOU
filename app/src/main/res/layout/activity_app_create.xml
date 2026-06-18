@@ -68,7 +68,6 @@
                 android:layout_height="76dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/bg_image_placeholder"
-                android:padding="12dp"
                 tools:srcCompat="@mipmap/ic_youtobe" />
 
             <TextView
@@ -76,11 +75,10 @@
                 android:layout_width="60dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_open_tag"
                 android:gravity="center"
                 android:text="@string/ca_open"
-                android:textColor="@color/gray_text"
+                android:textColor="@color/blue_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 

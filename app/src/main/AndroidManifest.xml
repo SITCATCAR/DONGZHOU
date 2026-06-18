@@ -29,6 +29,10 @@
             android:name=".Activities.CreateActivities.FormCreateActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activities.CreateResultActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
