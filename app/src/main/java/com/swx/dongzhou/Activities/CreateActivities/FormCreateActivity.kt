@@ -10,8 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import com.swx.dongzhou.Activities.CreateResultActivity
 import com.swx.dongzhou.BaseActivity
+import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ActivityFormCreateBinding
-import com.swx.dongzhou.pages.createPage.CreateItemType
 
 class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     ActivityFormCreateBinding::inflate
@@ -29,8 +29,8 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     override fun initData() {
         val typeName = intent.getStringExtra(CreatePageConfigs.EXTRA_CREATE_TYPE)
         val type = runCatching {
-            CreateItemType.valueOf(typeName.orEmpty())
-        }.getOrDefault(CreateItemType.Website)
+            QRCodeType.valueOf(typeName.orEmpty())
+        }.getOrDefault(QRCodeType.Website)
 
         config = CreatePageConfigs.getConfig(type)
     }
@@ -56,13 +56,13 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }
 
         binding.layoutEmail.setOnClickListener {
-            if (config.type == CreateItemType.Email) {
+            if (config.type == QRCodeType.Email) {
                 toggleEmailExtraContent()
             }
         }
 
         binding.etEmail.setOnFocusChangeListener { _, hasFocus ->
-            if (config.type == CreateItemType.Email && hasFocus && !emailExpanded) {
+            if (config.type == QRCodeType.Email && hasFocus && !emailExpanded) {
                 toggleEmailExtraContent()
             }
         }
@@ -98,14 +98,14 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         })
 
         binding.layoutTitle.setOnClickListener {
-            if (config.type == CreateItemType.Calendar) {
+            if (config.type == QRCodeType.Calendar) {
                 showCalendarLocation()
                 binding.etTitle.requestFocus()
             }
         }
 
         binding.etTitle.setOnFocusChangeListener { _, hasFocus ->
-            if (config.type == CreateItemType.Calendar && hasFocus) {
+            if (config.type == QRCodeType.Calendar && hasFocus) {
                 showCalendarLocation()
             }
         }

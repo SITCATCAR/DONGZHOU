@@ -1,7 +1,7 @@
 package com.swx.dongzhou.Activities.CreateActivities
 
 import com.swx.dongzhou.R
-import com.swx.dongzhou.pages.createPage.CreateItemType
+import com.swx.dongzhou.Util.QRCodeType
 
 enum class CreatePageMode {
     APP, FORM
@@ -24,7 +24,7 @@ data class CreateFieldConfig(
 )
 
 data class CreatePageConfig(
-    val type: CreateItemType,
+    val type: QRCodeType,
     val title: String,
     val mode: CreatePageMode,
     val iconRes: Int,
@@ -40,9 +40,9 @@ data class CreatePageConfig(
 object CreatePageConfigs {
     const val EXTRA_CREATE_TYPE = "extra_create_type"
 
-    fun getConfig(type: CreateItemType): CreatePageConfig {
+    fun getConfig(type: QRCodeType): CreatePageConfig {
         return when (type) {
-            CreateItemType.Website -> formConfig(
+            QRCodeType.Website -> formConfig(
                 type = type,
                 title = "Website",
                 iconRes = R.mipmap.ic_url,
@@ -57,7 +57,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.WIFI -> formConfig(
+            QRCodeType.WIFI -> formConfig(
                 type = type,
                 title = "WIFI",
                 iconRes = R.mipmap.ic_wifi,
@@ -84,7 +84,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.Text -> formConfig(
+            QRCodeType.Text -> formConfig(
                 type = type,
                 title = "Text",
                 iconRes = R.mipmap.ic_text,
@@ -98,7 +98,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.Contact -> formConfig(
+            QRCodeType.Contact -> formConfig(
                 type = type,
                 title = "Contact",
                 iconRes = R.mipmap.ic_contact,
@@ -109,7 +109,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.Tel -> formConfig(
+            QRCodeType.Tel -> formConfig(
                 type = type,
                 title = "Tel",
                 iconRes = R.mipmap.ic_tel,
@@ -123,7 +123,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.Email -> formConfig(
+            QRCodeType.Email -> formConfig(
                 type = type,
                 title = "E-mail",
                 iconRes = R.mipmap.ic_email,
@@ -140,7 +140,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.SMS -> formConfig(
+            QRCodeType.SMS -> formConfig(
                 type = type,
                 title = "SMS",
                 iconRes = R.mipmap.ic_sms,
@@ -155,7 +155,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.Calendar -> formConfig(
+            QRCodeType.Calendar -> formConfig(
                 type = type,
                 title = "Calendar",
                 iconRes = R.mipmap.ic_calendar,
@@ -179,7 +179,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.MyCard -> formConfig(
+            QRCodeType.MyCard -> formConfig(
                 type = type,
                 title = "My Card",
                 iconRes = R.mipmap.ic_mecard,
@@ -194,7 +194,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.FaceBook -> appConfig(
+            QRCodeType.FaceBook -> appConfig(
                 type = type,
                 title = "FaceBook",
                 iconRes = R.mipmap.ic_facebook,
@@ -202,7 +202,7 @@ object CreatePageConfigs {
                 tabHints = mapOf("Facebook ID" to "Enter Facebook ID", "URL" to "Enter Facebook URL")
             )
 
-            CreateItemType.Instagram -> appConfig(
+            QRCodeType.Instagram -> appConfig(
                 type = type,
                 title = "Instagram",
                 iconRes = R.mipmap.ic_ins,
@@ -210,7 +210,7 @@ object CreatePageConfigs {
                 tabHints = mapOf("Username" to "Enter Instagram username", "URL" to "Enter Instagram URL")
             )
 
-            CreateItemType.WhatsApp -> appConfig(
+            QRCodeType.WhatsApp -> appConfig(
                 type = type,
                 title = "WhatsApp",
                 iconRes = R.mipmap.ic_whatsapp,
@@ -219,7 +219,7 @@ object CreatePageConfigs {
                 showOpenTag = false
             )
 
-            CreateItemType.Youtube -> appConfig(
+            QRCodeType.Youtube -> appConfig(
                 type = type,
                 title = "YouTube",
                 iconRes = R.mipmap.ic_youtobe,
@@ -231,7 +231,7 @@ object CreatePageConfigs {
                 )
             )
 
-            CreateItemType.Twitter -> appConfig(
+            QRCodeType.Twitter -> appConfig(
                 type = type,
                 title = "Twitter",
                 iconRes = R.mipmap.ic_twitter,
@@ -239,14 +239,14 @@ object CreatePageConfigs {
                 tabHints = mapOf("Username" to "Enter Twitter username", "URL" to "Enter Twitter URL")
             )
 
-            CreateItemType.Spotify -> appConfig(
+            QRCodeType.Spotify -> appConfig(
                 type = type,
                 title = "Spotify",
                 iconRes = R.mipmap.ic_spotify,
                 appHint = "Artist name"
             )
 
-            CreateItemType.Paypal -> appConfig(
+            QRCodeType.Paypal -> appConfig(
                 type = type,
                 title = "PayPal",
                 iconRes = R.mipmap.ic_paypal,
@@ -256,7 +256,7 @@ object CreatePageConfigs {
                 showQuickText = true
             )
 
-            CreateItemType.Viber -> appConfig(
+            QRCodeType.Viber -> appConfig(
                 type = type,
                 title = "Viber",
                 iconRes = R.mipmap.ic_viber,
@@ -268,30 +268,30 @@ object CreatePageConfigs {
     }
 
     fun createContent(
-        type: CreateItemType,
+        type: QRCodeType,
         selectedTab: String,
         values: Map<String, String>,
         switches: Map<String, Boolean>
     ): String {
         return when (type) {
-            CreateItemType.Website -> values.value("url")
-            CreateItemType.WIFI -> "WIFI:T:${values.value("security")};S:${values.value("wifiName")};P:${values.value("password")};;"
-            CreateItemType.Text -> values.value("text")
-            CreateItemType.Contact -> buildLines(
+            QRCodeType.Website -> values.value("url")
+            QRCodeType.WIFI -> "WIFI:T:${values.value("security")};S:${values.value("wifiName")};P:${values.value("password")};;"
+            QRCodeType.Text -> values.value("text")
+            QRCodeType.Contact -> buildLines(
                 "BEGIN:VCARD",
                 "FN:${values.value("name")}",
                 "TEL:${values.value("phone1")}",
                 "TEL:${values.value("phone2")}",
                 "END:VCARD"
             )
-            CreateItemType.Tel -> "tel:${values.value("phone")}"
-            CreateItemType.Email -> buildLines(
+            QRCodeType.Tel -> "tel:${values.value("phone")}"
+            QRCodeType.Email -> buildLines(
                 "mailto:${values.value("email")}",
                 "subject=${values.value("subject")}",
                 "body=${values.value("content")}"
             )
-            CreateItemType.SMS -> "SMSTO:${values.value("phone")}:${values.value("message")}"
-            CreateItemType.Calendar -> buildLines(
+            QRCodeType.SMS -> "SMSTO:${values.value("phone")}:${values.value("message")}"
+            QRCodeType.Calendar -> buildLines(
                 "BEGIN:VEVENT",
                 "SUMMARY:${values.value("title")}",
                 "LOCATION:${values.value("location")}",
@@ -301,7 +301,7 @@ object CreatePageConfigs {
                 "ALL_DAY:${switches["allDay"] == true}",
                 "END:VEVENT"
             )
-            CreateItemType.MyCard -> buildLines(
+            QRCodeType.MyCard -> buildLines(
                 "MECARD:N:${values.value("name")};",
                 "TEL:${values.value("phone")};",
                 "EMAIL:${values.value("email")};",
@@ -310,19 +310,19 @@ object CreatePageConfigs {
                 "ORG:${values.value("org")};",
                 "NOTE:${values.value("note")};;"
             )
-            CreateItemType.FaceBook -> appContent("facebook", selectedTab, values.value("appInput"))
-            CreateItemType.Instagram -> appContent("instagram", selectedTab, values.value("appInput"))
-            CreateItemType.WhatsApp -> "https://wa.me/${values.value("appInput")}"
-            CreateItemType.Youtube -> appContent("youtube", selectedTab, values.value("appInput"))
-            CreateItemType.Twitter -> appContent("twitter", selectedTab, values.value("appInput"))
-            CreateItemType.Spotify -> "spotify:${values.value("appInput")}"
-            CreateItemType.Paypal -> "https://paypal.me/${values.value("appInput")}"
-            CreateItemType.Viber -> "viber://chat?number=${values.value("appInput")}"
+            QRCodeType.FaceBook -> appContent("facebook", selectedTab, values.value("appInput"))
+            QRCodeType.Instagram -> appContent("instagram", selectedTab, values.value("appInput"))
+            QRCodeType.WhatsApp -> "https://wa.me/${values.value("appInput")}"
+            QRCodeType.Youtube -> appContent("youtube", selectedTab, values.value("appInput"))
+            QRCodeType.Twitter -> appContent("twitter", selectedTab, values.value("appInput"))
+            QRCodeType.Spotify -> "spotify:${values.value("appInput")}"
+            QRCodeType.Paypal -> "https://paypal.me/${values.value("appInput")}"
+            QRCodeType.Viber -> "viber://chat?number=${values.value("appInput")}"
         }
     }
 
     private fun formConfig(
-        type: CreateItemType,
+        type: QRCodeType,
         title: String,
         iconRes: Int,
         fields: List<CreateFieldConfig>,
@@ -339,7 +339,7 @@ object CreatePageConfigs {
     }
 
     private fun appConfig(
-        type: CreateItemType,
+        type: QRCodeType,
         title: String,
         iconRes: Int,
         tabs: List<String> = emptyList(),

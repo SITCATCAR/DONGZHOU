@@ -1,29 +1,27 @@
 package com.swx.dongzhou.Util
 
 import com.swx.dongzhou.R
-import com.swx.dongzhou.pages.createPage.CreateItem
-import com.swx.dongzhou.pages.createPage.CreateItemType
 
 object Utils {
-    fun getItemImage(type: CreateItemType): Int{
+    fun getItemImage(type: QRCodeType): Int{
         return when(type){
-            CreateItemType.Website -> R.mipmap.ic_url
-            CreateItemType.WIFI -> R.mipmap.ic_wifi
-            CreateItemType.Text -> R.mipmap.ic_text
-            CreateItemType.Contact -> R.mipmap.ic_contact
-            CreateItemType.Tel -> R.mipmap.ic_tel
-            CreateItemType.Email -> R.mipmap.ic_email
-            CreateItemType.SMS -> R.mipmap.ic_sms
-            CreateItemType.Calendar -> R.mipmap.ic_calendar
-            CreateItemType.MyCard -> R.mipmap.ic_mecard
-            CreateItemType.FaceBook -> R.mipmap.ic_facebook
-            CreateItemType.Instagram -> R.mipmap.ic_ins
-            CreateItemType.WhatsApp -> R.mipmap.ic_whatsapp
-            CreateItemType.Youtube -> R.mipmap.ic_youtobe
-            CreateItemType.Twitter -> R.mipmap.ic_twitter
-            CreateItemType.Spotify -> R.mipmap.ic_spotify
-            CreateItemType.Paypal -> R.mipmap.ic_paypal
-            CreateItemType.Viber -> R.mipmap.ic_viber
+            QRCodeType.Website -> R.mipmap.ic_url
+            QRCodeType.WIFI -> R.mipmap.ic_wifi
+            QRCodeType.Text -> R.mipmap.ic_text
+            QRCodeType.Contact -> R.mipmap.ic_contact
+            QRCodeType.Tel -> R.mipmap.ic_tel
+            QRCodeType.Email -> R.mipmap.ic_email
+            QRCodeType.SMS -> R.mipmap.ic_sms
+            QRCodeType.Calendar -> R.mipmap.ic_calendar
+            QRCodeType.MyCard -> R.mipmap.ic_mecard
+            QRCodeType.FaceBook -> R.mipmap.ic_facebook
+            QRCodeType.Instagram -> R.mipmap.ic_ins
+            QRCodeType.WhatsApp -> R.mipmap.ic_whatsapp
+            QRCodeType.Youtube -> R.mipmap.ic_youtobe
+            QRCodeType.Twitter -> R.mipmap.ic_twitter
+            QRCodeType.Spotify -> R.mipmap.ic_spotify
+            QRCodeType.Paypal -> R.mipmap.ic_paypal
+            QRCodeType.Viber -> R.mipmap.ic_viber
         }
     }
 }

@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import com.swx.dongzhou.Activities.CreateResultActivity
 import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.R
+import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ActivityAppCreateBinding
-import com.swx.dongzhou.pages.createPage.CreateItemType
 
 class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
     ActivityAppCreateBinding::inflate
@@ -24,8 +24,8 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
     override fun initData() {
         val typeName = intent.getStringExtra(CreatePageConfigs.EXTRA_CREATE_TYPE)
         val type = runCatching {
-            CreateItemType.valueOf(typeName.orEmpty())
-        }.getOrDefault(CreateItemType.Youtube)
+            QRCodeType.valueOf(typeName.orEmpty())
+        }.getOrDefault(QRCodeType.Youtube)
 
         config = CreatePageConfigs.getConfig(type)
         selectedTab = config.tabs.firstOrNull().orEmpty()

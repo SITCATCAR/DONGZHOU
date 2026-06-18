@@ -1,17 +1,10 @@
 package com.swx.dongzhou.Activities
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.BaseActivity
-import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.QRCodeGenerator
 import com.swx.dongzhou.Util.Utils
 import com.swx.dongzhou.databinding.ActivityCreateResultBinding
-import com.swx.dongzhou.pages.createPage.CreateItemType
 import kotlinx.coroutines.launch
 
 class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
