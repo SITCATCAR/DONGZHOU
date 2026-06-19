@@ -6,4 +6,6 @@
     <color name="gray_text">#7F88A1</color>
     <color name="blue_text">#0188FE</color>
     <color name="black_text">#171718</color>
+    <color name="history_background">#EEF1F4</color>
+    <color name="history_time_text">#7F88A1</color>
 </resources>

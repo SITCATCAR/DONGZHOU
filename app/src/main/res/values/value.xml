@@ -5,5 +5,7 @@
     <dimen name="create_item_bg_height">68dp</dimen>
     
     <dimen name="radius">8dp</dimen>
+    <dimen name="history_record_margin_top">16dp</dimen>
+    <dimen name="history_view_all_margin_top">6dp</dimen>
 
 </resources>
