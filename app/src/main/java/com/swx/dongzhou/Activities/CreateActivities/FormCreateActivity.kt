@@ -1,10 +1,16 @@
 package com.swx.dongzhou.Activities.CreateActivities
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
@@ -13,6 +19,7 @@ import com.swx.dongzhou.Activities.CreateResultActivity
 import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
+import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ActivityFormCreateBinding
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +38,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     private lateinit var editTexts: Map<String, EditText>
     private lateinit var textValues: Map<String, TextView>
     private lateinit var switches: Map<String, SwitchCompat>
+    private var securityPopupWindow: PopupWindow? = null
 
     override fun initData() {
         val typeName = intent.getStringExtra(CreatePageConfigs.EXTRA_CREATE_TYPE)
@@ -74,9 +82,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }
 
         binding.layoutSecurity.setOnClickListener {
-            securityDropdownVisible = !securityDropdownVisible
-            binding.layoutSecurityDropdown.visibility =
-                if (securityDropdownVisible) View.VISIBLE else View.GONE
+            showSecurityPopup()
         }
 
         binding.tvSecurityWpa.setOnClickListener {
@@ -119,6 +125,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         binding.switchAllDay.setOnCheckedChangeListener { _, checked ->
             binding.tvStartTime.text = if (checked) "Jan 8" else "Jan 8 9:30"
             binding.tvEndTime.text = if (checked) "Jan 8" else "11:30"
+            updateCreateButtonState()
         }
 
         binding.layoutStartTime.setOnClickListener {
@@ -134,8 +141,13 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }
 
         binding.btnCreate.setOnClickListener {
+            if (!isCreateEnabled()) {
+                return@setOnClickListener
+            }
             handleCreate()
         }
+
+        setupCreateButtonState()
     }
 
     private fun initViewMaps() {
@@ -217,6 +229,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }
         binding.layoutQuickText.visibility = if (config.showQuickText) View.VISIBLE else View.GONE
         binding.layoutSecurityDropdown.visibility = View.GONE
+        securityDropdownVisible = false
 
         config.fields.forEach { field ->
             setFieldVisibility(field.key, if (field.visibleOnStart) View.VISIBLE else View.GONE)
@@ -247,11 +260,81 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         binding.tvSecurity.text = type
         binding.layoutSecurityDropdown.visibility = View.GONE
         securityDropdownVisible = false
+        securityPopupWindow?.dismiss()
         binding.layoutPassword.visibility = if (type == "None") View.GONE else View.VISIBLE
+        updateCreateButtonState()
+    }
+
+    private fun showSecurityPopup() {
+        if (config.type != QRCodeType.WIFI) {
+            return
+        }
+        val popupContent = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = getDrawable(R.drawable.bg_history_card)
+            setPadding(0, dp(10), 0, dp(10))
+        }
+
+        listOf("WPA/WPA2", "WEP", "None").forEach { option ->
+            val itemView = LayoutInflater.from(this)
+                .inflate(R.layout.create_security_popup_item, popupContent, false) as TextView
+            itemView.text = option
+            itemView.setOnClickListener {
+                selectSecurityType(option)
+            }
+            popupContent.addView(itemView)
+        }
+
+        securityPopupWindow?.dismiss()
+        val popupStartOffset = dp(64)
+        val popupWidth = (binding.layoutSecurity.width - dp(96)).coerceAtLeast(dp(240))
+        securityPopupWindow = PopupWindow(
+            popupContent,
+            popupWidth,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            isOutsideTouchable = true
+            elevation = dp(8).toFloat()
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            showAsDropDown(binding.layoutSecurity, popupStartOffset, 0)
+        }
     }
 
     private fun showCalendarLocation() {
         setFieldVisibility("location", View.VISIBLE)
+    }
+
+    private fun setupCreateButtonState() {
+        editTexts.values.forEach { editText ->
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    updateCreateButtonState()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
+        }
+        updateCreateButtonState()
+    }
+
+    private fun updateCreateButtonState() {
+        val canCreate = isCreateEnabled()
+        binding.btnCreate.isEnabled = canCreate
+        binding.btnCreate.setBackgroundResource(
+            if (canCreate) R.drawable.bg_button_enable else R.drawable.bg_button_unable
+        )
+    }
+
+    private fun isCreateEnabled(): Boolean {
+        val values = collectValues()
+        return config.fields
+            .filter { field -> field.required }
+            .all { field -> values[field.key].orEmpty().isNotBlank() }
     }
 
     private fun handleCreate() {
@@ -336,5 +419,15 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
 
         editText.setText(currentText + suffix)
         editText.setSelection(editText.text.length)
+    }
+
+    private fun dp(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
+    }
+
+    override fun onDestroy() {
+        securityPopupWindow?.dismiss()
+        securityPopupWindow = null
+        super.onDestroy()
     }
 }

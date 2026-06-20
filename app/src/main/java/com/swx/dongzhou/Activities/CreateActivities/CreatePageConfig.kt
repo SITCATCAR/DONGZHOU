@@ -33,6 +33,8 @@ data class CreatePageConfig(
     val appHint: String = "",
     val showOpenTag: Boolean = false,
     val showCountryCode: Boolean = false,
+    val countryCode: String = "+1",
+    val description: String = "",
     val showQuickText: Boolean = false,
     val fields: List<CreateFieldConfig> = emptyList()
 )
@@ -262,6 +264,8 @@ object CreatePageConfigs {
                 iconRes = R.mipmap.ic_viber,
                 appHint = "Phone number",
                 showCountryCode = true,
+                countryCode = "+971",
+                description = "Others can contact you directly on Viber by scanning the QR\ncode you create",
                 showOpenTag = false
             )
         }
@@ -347,6 +351,8 @@ object CreatePageConfigs {
         appHint: String = "",
         showOpenTag: Boolean = true,
         showCountryCode: Boolean = false,
+        countryCode: String = "+1",
+        description: String = "",
         showQuickText: Boolean = false
     ): CreatePageConfig {
         return CreatePageConfig(
@@ -359,6 +365,8 @@ object CreatePageConfigs {
             appHint = appHint,
             showOpenTag = showOpenTag,
             showCountryCode = showCountryCode,
+            countryCode = countryCode,
+            description = description,
             showQuickText = showQuickText
         )
     }

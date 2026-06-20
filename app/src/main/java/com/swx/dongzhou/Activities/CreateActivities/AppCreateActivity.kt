@@ -1,6 +1,8 @@
 package com.swx.dongzhou.Activities.CreateActivities
 
 import android.content.Intent
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -42,9 +44,19 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
         binding.tvTitle.text = config.title
         binding.ivAppIcon.setImageResource(config.iconRes)
         binding.tvOpenTag.visibility = if (config.showOpenTag) View.VISIBLE else View.GONE
+        binding.tvCountryCode.text = config.countryCode
         binding.tvCountryCode.visibility = if (config.showCountryCode) View.VISIBLE else View.GONE
-        binding.viewCountryDivider.visibility = if (config.showCountryCode) View.VISIBLE else View.GONE
+        binding.viewCountryDivider.visibility = View.GONE
+        binding.tvAppDescription.text = config.description
+        binding.tvAppDescription.visibility = if (config.description.isNotBlank()) View.VISIBLE else View.GONE
         binding.layoutQuickText.visibility = if (config.showQuickText) View.VISIBLE else View.GONE
+        binding.layoutAppInput.setPadding(
+            if (config.showCountryCode) 0 else dp(18),
+            0,
+            dp(14),
+            0
+        )
+        binding.tvCountryCode.setBackgroundResource(R.drawable.bg_country_code)
 
         initTabs()
         updateAppHint()
@@ -63,9 +75,26 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
             addSuffix(binding.etAppInput, ".com")
         }
 
+        binding.etAppInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateCreateButtonState()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
         binding.btnCreate.setOnClickListener {
+            if (!isCreateEnabled()) {
+                return@setOnClickListener
+            }
             handleCreate()
         }
+
+        updateCreateButtonState()
     }
 
     private fun initTabs() {
@@ -108,6 +137,18 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
 
     private fun updateAppHint() {
         binding.etAppInput.hint = config.tabHints[selectedTab] ?: config.appHint
+    }
+
+    private fun updateCreateButtonState() {
+        val canCreate = isCreateEnabled()
+        binding.btnCreate.isEnabled = canCreate
+        binding.btnCreate.setBackgroundResource(
+            if (canCreate) R.drawable.bg_button_enable else R.drawable.bg_button_unable
+        )
+    }
+
+    private fun isCreateEnabled(): Boolean {
+        return binding.etAppInput.text.toString().trim().isNotEmpty()
     }
 
     private fun handleCreate() {
@@ -174,5 +215,9 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
 
     private fun color(colorRes: Int): Int {
         return ContextCompat.getColor(this, colorRes)
+    }
+
+    private fun dp(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
     }
 }

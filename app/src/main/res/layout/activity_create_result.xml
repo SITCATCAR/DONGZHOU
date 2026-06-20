@@ -117,7 +117,7 @@
             android:id="@+id/btnSave"
             android:layout_width="140dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_create_result_button"
+            android:background="@drawable/bg_button_enable"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -140,7 +140,7 @@
             android:layout_width="140dp"
             android:layout_height="48dp"
             android:layout_marginStart="17dp"
-            android:background="@drawable/bg_create_result_button"
+            android:background="@drawable/bg_button_enable"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatImageView
