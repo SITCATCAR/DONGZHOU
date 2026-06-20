@@ -21,11 +21,48 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/image_back"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="20dp"
+        android:padding="2dp"
+        android:src="@mipmap/ic_results_page_return"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/text_history_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_history_title" />
+
+    <TextView
+        android:id="@+id/text_mode_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Favorites"
+        android:textColor="@color/black_text"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/text_history_title"
+        app:layout_constraintStart_toEndOf="@id/image_back"
+        app:layout_constraintTop_toTopOf="@id/text_history_title" />
+
+    <ImageView
         android:id="@+id/image_filter"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:padding="3dp"
         android:src="@drawable/ic_history_filter"
+        app:layout_constraintBottom_toBottomOf="@id/text_history_title"
+        app:layout_constraintEnd_toStartOf="@id/image_delete"
+        app:layout_constraintTop_toTopOf="@id/text_history_title" />
+
+    <ImageView
+        android:id="@+id/image_select_all"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:padding="3dp"
+        android:src="@mipmap/ic_select"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/text_history_title"
         app:layout_constraintEnd_toStartOf="@id/image_delete"
         app:layout_constraintTop_toTopOf="@id/text_history_title" />

@@ -1,5 +1,6 @@
 package com.swx.dongzhou.pages.historyPage
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.swx.dongzhou.R
 
 class HistoryAdapter(
-    val itemList: MutableList<HistoryGroupItem>
+    private val itemList: MutableList<HistoryGroupItem>,
+    private val onItemClick: (HistoryRecordItem) -> Unit,
+    private val onItemLongClick: (HistoryRecordItem) -> Unit,
+    private val onFavoriteClick: (HistoryRecordItem) -> Unit,
+    private val onViewAllClick: () -> Unit
 ) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,6 +41,9 @@ class HistoryAdapter(
             val viewAllView = LayoutInflater.from(holder.itemView.context)
                 .inflate(R.layout.history_view_all_item, holder.recordContainer, false)
             addViewAllMargin(viewAllView)
+            viewAllView.setOnClickListener {
+                onViewAllClick()
+            }
             holder.recordContainer.addView(viewAllView)
         }
     }
@@ -56,13 +64,36 @@ class HistoryAdapter(
         val recordType = view.findViewById<TextView>(R.id.text_record_type)
         val recordTime = view.findViewById<TextView>(R.id.text_record_time)
         val favoriteIcon = view.findViewById<ImageView>(R.id.image_record_favorite)
+        val selectIcon = view.findViewById<ImageView>(R.id.image_record_select)
 
         recordIcon.setImageResource(item.iconRes)
         recordTitle.text = item.title
         recordType.text = item.type
         recordTime.text = item.time
-        recordTime.isVisible = item.time != null
-        favoriteIcon.isVisible = item.isFavorite
+        recordTime.isVisible = item.time != null && !item.isSelectionMode
+
+        favoriteIcon.isVisible = !item.isSelectionMode
+        favoriteIcon.setImageResource(
+            if (item.isFavorite) {
+                R.mipmap.ic_favorites_selected
+            } else {
+                R.drawable.ic_favorites_unselected
+            }
+        )
+        favoriteIcon.setOnClickListener {
+            onFavoriteClick(item)
+        }
+
+        selectIcon.isVisible = item.isSelectionMode
+        selectIcon.setImageResource(if (item.isSelected) R.mipmap.ic_select_all else R.mipmap.ic_select)
+
+        view.setOnClickListener {
+            onItemClick(item)
+        }
+        view.setOnLongClickListener {
+            onItemLongClick(item)
+            true
+        }
     }
 
     private fun addRecordMargin(view: View, index: Int) {
@@ -77,7 +108,7 @@ class HistoryAdapter(
     private fun addViewAllMargin(view: View) {
         val params = view.layoutParams as LinearLayout.LayoutParams
         params.topMargin = view.resources.getDimensionPixelSize(R.dimen.history_view_all_margin_top)
-        params.gravity = android.view.Gravity.END
+        params.gravity = Gravity.END
         view.layoutParams = params
     }
 

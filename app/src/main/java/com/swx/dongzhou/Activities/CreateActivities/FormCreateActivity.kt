@@ -8,10 +8,16 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.Activities.CreateResultActivity
 import com.swx.dongzhou.BaseActivity
+import com.swx.dongzhou.HistoryDatabase.History
+import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ActivityFormCreateBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     ActivityFormCreateBinding::inflate
@@ -266,12 +272,37 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
             values = values,
             switches = switchValues
         )
-        //TODO 创建二维码
-        val intent = Intent(this, CreateResultActivity::class.java).apply {
-            putExtra("type",config.type.name)
-            putExtra("content",content)
+        val title = getHistoryTitle(values, content)
+        saveHistoryAndOpenResult(title, content)
+    }
+
+    private fun saveHistoryAndOpenResult(title: String, content: String) {
+        lifecycleScope.launch {
+            try {
+                val historyId = withContext(Dispatchers.IO) {
+                    val history = History(
+                        title = title,
+                        content = content,
+                        type = config.type
+                    )
+                    HistoryDatabase.getDatabase(this@FormCreateActivity).HistoryDao().insert(history)
+                }
+                val intent = Intent(this@FormCreateActivity, CreateResultActivity::class.java).apply {
+                    putExtra("type", config.type.name)
+                    putExtra("content", content)
+                    putExtra("historyId", historyId)
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this@FormCreateActivity, "Save history failed", Toast.LENGTH_SHORT).show()
+            }
         }
-        startActivity(intent)
+    }
+
+    private fun getHistoryTitle(values: Map<String, String>, content: String): String {
+        val titleKey = config.fields.firstOrNull { field -> field.required }?.key
+            ?: config.fields.firstOrNull()?.key
+        return values[titleKey].orEmpty().ifBlank { content }
     }
 
     private fun collectValues(): Map<String, String> {

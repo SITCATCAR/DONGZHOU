@@ -9,11 +9,17 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.Activities.CreateResultActivity
 import com.swx.dongzhou.BaseActivity
+import com.swx.dongzhou.HistoryDatabase.History
+import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ActivityAppCreateBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
     ActivityAppCreateBinding::inflate
@@ -118,11 +124,30 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
             switches = emptyMap()
         )
         //TODO 创建二维码
-        val intent = Intent(this, CreateResultActivity::class.java).apply {
-            putExtra("type",config.type.name)
-            putExtra("content",content)
+        saveHistoryAndOpenResult(input, content)
+    }
+
+    private fun saveHistoryAndOpenResult(title: String, content: String) {
+        lifecycleScope.launch {
+            try {
+                val historyId = withContext(Dispatchers.IO) {
+                    val history = History(
+                        title = title.ifBlank { content },
+                        content = content,
+                        type = config.type
+                    )
+                    HistoryDatabase.getDatabase(this@AppCreateActivity).HistoryDao().insert(history)
+                }
+                val intent = Intent(this@AppCreateActivity, CreateResultActivity::class.java).apply {
+                    putExtra("type", config.type.name)
+                    putExtra("content", content)
+                    putExtra("historyId", historyId)
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this@AppCreateActivity, "Save history failed", Toast.LENGTH_SHORT).show()
+            }
         }
-        startActivity(intent)
     }
 
     private fun addPrefix(editText: EditText, prefix: String) {

@@ -59,4 +59,12 @@
         android:layout_marginStart="10dp"
         android:src="@mipmap/ic_favorites_selected" />
 
+    <ImageView
+        android:id="@+id/image_record_select"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="10dp"
+        android:src="@mipmap/ic_select"
+        android:visibility="gone" />
+
 </LinearLayout>
