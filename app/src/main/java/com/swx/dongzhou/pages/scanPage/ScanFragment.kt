@@ -3,6 +3,7 @@ package com.swx.dongzhou.pages.scanPage
 import android.annotation.SuppressLint
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
@@ -51,6 +52,11 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
             Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
         }
     }
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { fetchImageFromUri(it) }
+    }
 
     override fun loadData() {
     }
@@ -65,8 +71,12 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
 
     private fun initActionButtons() {
         binding.btnGallery.setOnClickListener {
+            pickImageLauncher.launch("image/*")
         }
         binding.btnFlash.setOnClickListener {
+        }
+        binding.btnBatch.setOnClickListener {
+            Toast.makeText(requireContext(), "Batch scan is not ready", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -161,7 +171,7 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         }
         barcodeScanner.process(image)
             .addOnSuccessListener { barcodes ->
-                handleBarcodes(barcodes)
+                handleBarcodes(barcodes, showNoResultToast = false)
             }
             .addOnFailureListener { e ->
                 Log.e("ScanFragment", "Scanning failed", e)
@@ -172,14 +182,48 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
             }
     }
 
-    private fun handleBarcodes(barcodes: List<Barcode>) {
+    private fun fetchImageFromUri(uri: Uri) {
+        if (isScanning) {
+            return
+        }
+        val barcodeScanner = scanner
+        if (barcodeScanner == null) {
+            Toast.makeText(requireContext(), "Save scan failed", Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            isScanning = true
+            val image = InputImage.fromFilePath(requireContext(), uri)
+            barcodeScanner.process(image)
+                .addOnSuccessListener { barcodes ->
+                    handleBarcodes(barcodes, showNoResultToast = true)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ScanFragment", "Scanning failed", e)
+                    Toast.makeText(requireContext(), "Save scan failed", Toast.LENGTH_SHORT).show()
+                    isScanning = false
+                }
+        } catch (e: Exception) {
+            Log.e("ScanFragment", "Fetch image failed", e)
+            Toast.makeText(requireContext(), "Save scan failed", Toast.LENGTH_SHORT).show()
+            isScanning = false
+        }
+    }
+
+    private fun handleBarcodes(barcodes: List<Barcode>, showNoResultToast: Boolean) {
         val barcode = barcodes.firstOrNull()
         if (barcode == null) {
+            if (showNoResultToast) {
+                Toast.makeText(requireContext(), "No barcode found", Toast.LENGTH_SHORT).show()
+            }
             isScanning = false
             return
         }
         val value = barcode.rawValue.orEmpty()
         if (value.isBlank() || shouldIgnoreSameScan(value)) {
+            if (showNoResultToast) {
+                Toast.makeText(requireContext(), "No barcode found", Toast.LENGTH_SHORT).show()
+            }
             isScanning = false
             return
         }
