@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 扫描页底部三个圆形动作按钮（相册/手电筒/批量） -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/scan_action_bg_pressed">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/scan_action_bg" />
+        </shape>
+    </item>
+</ripple>

@@ -26,4 +26,11 @@
     <!--    创建website Activity-->
     <string name="website_input_hint">Enter URL</string>
 
+    <!-- 扫描页 -->
+    <string name="scan_action_gallery">相册</string>
+    <string name="scan_action_flashlight">手电筒</string>
+    <string name="scan_action_batch">批量</string>
+    <string name="scan_zoom_reduce">缩小</string>
+    <string name="scan_zoom_add">放大</string>
+
 </resources>

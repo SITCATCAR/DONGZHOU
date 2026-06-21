@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:keepScreenOn="true">
+
+    <View
+        android:id="@+id/cameraPlaceholder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/scanBox"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.65"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <View
+        android:id="@+id/maskTop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/scan_mask"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/scanBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/maskBottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/scan_mask"
+        app:layout_constraintTop_toBottomOf="@id/scanBox"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/maskLeft"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/scan_mask"
+        app:layout_constraintTop_toTopOf="@id/scanBox"
+        app:layout_constraintBottom_toBottomOf="@id/scanBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/scanBox" />
+
+    <View
+        android:id="@+id/maskRight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/scan_mask"
+        app:layout_constraintTop_toTopOf="@id/scanBox"
+        app:layout_constraintBottom_toBottomOf="@id/scanBox"
+        app:layout_constraintStart_toEndOf="@id/scanBox"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/scanFrame"
+        android:layout_width="266dp"
+        android:layout_height="266dp"
+        android:contentDescription="@null"
+        android:src="@drawable/scan_corner_frame"
+        app:layout_constraintTop_toTopOf="@id/scanBox"
+        app:layout_constraintBottom_toBottomOf="@id/scanBox"
+        app:layout_constraintStart_toStartOf="@id/scanBox"
+        app:layout_constraintEnd_toEndOf="@id/scanBox" />
+
+
+    <TextView
+        android:id="@+id/tvScanHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/scan_hint_text"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/scanBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/btnZoomReduce"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/scan_zoom_reduce"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_scan_reduce"
+        app:layout_constraintTop_toBottomOf="@id/tvScanHint"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/zoomSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginHorizontal="12dp"
+        android:max="100"
+        android:progress="0"
+        android:progressTint="@color/scan_blue"
+        android:thumbTint="@color/scan_blue"
+        app:layout_constraintBottom_toBottomOf="@id/btnZoomReduce"
+        app:layout_constraintEnd_toStartOf="@id/btnZoomAdd"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@id/btnZoomReduce"
+        app:layout_constraintTop_toTopOf="@id/btnZoomReduce"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/btnZoomAdd"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="24dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/scan_zoom_add"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_scan_add"
+        app:layout_constraintTop_toTopOf="@id/btnZoomReduce"
+        app:layout_constraintBottom_toBottomOf="@id/btnZoomReduce"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/actionBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btnZoomReduce"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnGallery"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_scan_action_button"
+            android:contentDescription="@string/scan_action_gallery"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_scan_gallery" />
+
+        <Space
+            android:layout_width="28dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/btnFlash"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_scan_action_button"
+            android:contentDescription="@string/scan_action_flashlight"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_scan_lighting" />
+
+        <Space
+            android:layout_width="28dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/btnBatch"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_scan_action_button"
+            android:contentDescription="@string/scan_action_batch"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_scan_batch" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
