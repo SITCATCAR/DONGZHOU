@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -34,8 +35,11 @@ import java.util.concurrent.Executors
 class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::inflate) {
 
     private var currentZoomRatio: Float = 1.0f
+    private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
     private var imageAnalyzer: ImageAnalysis? = null
+    private var isFlashEnabled = false
+    private var isCameraStarting = false
     private var isCameraStarted = false
     private var isScanning = false
     private var lastScanValue = ""
@@ -74,6 +78,7 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
             pickImageLauncher.launch("image/*")
         }
         binding.btnFlash.setOnClickListener {
+            toggleFlash()
         }
         binding.btnBatch.setOnClickListener {
             Toast.makeText(requireContext(), "Batch scan is not ready", Toast.LENGTH_SHORT).show()
@@ -83,7 +88,7 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     private fun initZoomSeekBar() {
         binding.zoomSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                currentZoomRatio = 1.0f + progress / 100f * (MAX_ZOOM_RATIO - 1.0f)
+                applyZoom(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -114,12 +119,14 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     }
 
     private fun startCamera() {
-        if (isCameraStarted) {
+        if (isCameraStarted || isCameraStarting) {
             return
         }
+        isCameraStarting = true
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             if (!isBindingAvailable) {
+                isCameraStarting = false
                 return@addListener
             }
             cameraProvider = cameraProviderFuture.get()
@@ -136,17 +143,55 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
                 }
             try {
                 cameraProvider?.unbindAll()
-                cameraProvider?.bindToLifecycle(
+                camera = cameraProvider?.bindToLifecycle(
                     viewLifecycleOwner,
                     CameraSelector.DEFAULT_BACK_CAMERA,
                     preview,
                     imageAnalyzer
                 )
+                isCameraStarting = false
                 isCameraStarted = true
+                updateFlashButtonState()
+                applyZoom(binding.zoomSeekBar.progress)
             } catch (e: Exception) {
                 Log.e("ScanFragment", "Use case binding failed", e)
+                camera = null
+                isCameraStarting = false
+                updateFlashButtonState()
             }
         }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
+    private fun toggleFlash() {
+        val currentCamera = camera
+        if (currentCamera?.cameraInfo?.hasFlashUnit() != true) {
+            Toast.makeText(requireContext(), "Flash is not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+        isFlashEnabled = !isFlashEnabled
+        currentCamera.cameraControl.enableTorch(isFlashEnabled)
+    }
+
+    private fun updateFlashButtonState() {
+        if (!isBindingAvailable) {
+            return
+        }
+        val hasFlash = camera?.cameraInfo?.hasFlashUnit() == true
+        binding.btnFlash.isEnabled = hasFlash
+        binding.btnFlash.alpha = if (hasFlash) 1.0f else DISABLED_BUTTON_ALPHA
+        if (!hasFlash) {
+            isFlashEnabled = false
+        }
+    }
+
+    private fun applyZoom(progress: Int) {
+        val zoomState = camera?.cameraInfo?.zoomState?.value
+        val minZoomRatio = zoomState?.minZoomRatio ?: MIN_ZOOM_RATIO
+        val maxZoomRatio = zoomState?.maxZoomRatio ?: MAX_ZOOM_RATIO
+        currentZoomRatio = minZoomRatio + progress / 100f * (maxZoomRatio - minZoomRatio)
+        camera?.cameraControl?.setZoomRatio(
+            currentZoomRatio.coerceIn(minZoomRatio, maxZoomRatio)
+        )
     }
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -295,9 +340,41 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     }
 
     fun closeCamera() {
+        camera?.cameraControl?.enableTorch(false)
         imageAnalyzer?.clearAnalyzer()
         cameraProvider?.unbindAll()
+        camera = null
+        imageAnalyzer = null
+        isFlashEnabled = false
+        isCameraStarting = false
         isCameraStarted = false
+        isScanning = false
+        updateFlashButtonState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isScanning = false
+        if (!isHidden && isBindingAvailable) {
+            openCamera()
+        }
+    }
+
+    override fun onPause() {
+        closeCamera()
+        super.onPause()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!isBindingAvailable) {
+            return
+        }
+        if (hidden) {
+            closeCamera()
+        } else {
+            openCamera()
+        }
     }
 
     override fun onDestroyView() {
@@ -311,7 +388,9 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     }
 
     companion object {
+        private const val MIN_ZOOM_RATIO = 1.0f
         private const val MAX_ZOOM_RATIO = 4.0f
+        private const val DISABLED_BUTTON_ALPHA = 0.4f
         private const val SCAN_DEBOUNCE_TIME = 2500L
     }
 }
