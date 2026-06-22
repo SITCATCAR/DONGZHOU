@@ -1,5 +1,6 @@
 package com.swx.dongzhou.pages.historyPage
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -10,10 +11,12 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.swx.dongzhou.Activities.ScanResultActivity
 import com.swx.dongzhou.Activities.CreateActivities.CreatePageConfigs
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.HistoryDatabase.History
@@ -47,6 +50,13 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
 
     private lateinit var historyAdapter: HistoryAdapter
     private var filterPopupWindow: PopupWindow? = null
+    private val scanResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            loadHistories()
+        }
+    }
 
     override fun initView() {
         historyAdapter = HistoryAdapter(
@@ -194,6 +204,13 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
     private fun onItemClick(item: HistoryRecordItem) {
         if (stateMachine.currentState is HistorySelectionState) {
             toggleSelection(item.id)
+        } else {
+            val intent = Intent(requireContext(), ScanResultActivity::class.java).apply {
+                putExtra(ScanResultActivity.EXTRA_SCAN_RESULT, item.content)
+                putExtra(ScanResultActivity.EXTRA_SCAN_TYPE, item.qrCodeType.name)
+                putExtra(ScanResultActivity.EXTRA_HISTORY_ID, item.id)
+            }
+            scanResultLauncher.launch(intent)
         }
     }
 

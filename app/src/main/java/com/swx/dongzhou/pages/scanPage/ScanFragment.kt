@@ -2,6 +2,7 @@ package com.swx.dongzhou.pages.scanPage
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
@@ -20,6 +21,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.swx.dongzhou.Activities.ScanResultActivity
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
@@ -289,12 +291,18 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     private fun saveScanHistory(history: History) {
         lifecycleScope.launch {
             try {
-                withContext(Dispatchers.IO) {
+                val historyId = withContext(Dispatchers.IO) {
                     HistoryDatabase.getDatabase(requireContext()).HistoryDao().insert(history)
                 }
                 lastScanValue = history.content
                 lastScanTime = System.currentTimeMillis()
                 Toast.makeText(requireContext(), "Scan saved", Toast.LENGTH_SHORT).show()
+                val intent = Intent(requireContext(), ScanResultActivity::class.java).apply {
+                    putExtra(ScanResultActivity.EXTRA_SCAN_RESULT, history.content)
+                    putExtra(ScanResultActivity.EXTRA_SCAN_TYPE, history.type.name)
+                    putExtra(ScanResultActivity.EXTRA_HISTORY_ID, historyId)
+                }
+                startActivity(intent)
                 delay(SCAN_DEBOUNCE_TIME)
                 isScanning = false
             } catch (e: Exception) {
