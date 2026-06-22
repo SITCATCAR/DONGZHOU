@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Youtube"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textColor="@color/black_text"
         android:gravity="center"
         android:maxLines="1" />

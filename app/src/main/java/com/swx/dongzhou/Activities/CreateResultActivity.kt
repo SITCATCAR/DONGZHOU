@@ -1,10 +1,15 @@
 package com.swx.dongzhou.Activities
 
+import android.Manifest
+import android.content.Intent
+import android.graphics.Bitmap
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.R
+import com.swx.dongzhou.Util.ImageSaver
 import com.swx.dongzhou.Util.QRCodeGenerator
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.Util.Utils
@@ -19,6 +24,16 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
     private lateinit var type: QRCodeType
     private var historyId = -1L
     private var isFavorite = false
+    private lateinit var bitmap: Bitmap
+    private val storagePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            saveQRCode()
+        } else {
+            Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun initView() {
         val typeName = intent.getStringExtra("type").orEmpty()
@@ -42,13 +57,18 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
         binding.btnFavorite.setOnClickListener {
             toggleFavorite()
         }
-        //TODO share,save
+        binding.btnSave.setOnClickListener {
+            saveQRCode()
+        }
+        binding.btnShare.setOnClickListener {
+            shareQRCode()
+        }
     }
 
-    private fun showQRCode(){
+    private fun showQRCode() {
         val content = intent.getStringExtra("content")?:""
         lifecycleScope.launch {
-            val bitmap = QRCodeGenerator.generateQRCode(content)
+            bitmap = QRCodeGenerator.generateQRCode(content)!!
             binding.qrCodeHolder.setImageBitmap(bitmap)
         }
     }
@@ -88,6 +108,37 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
                 Toast.makeText(this@CreateResultActivity, "Update favorite failed", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun saveQRCode() {
+        if (!::bitmap.isInitialized) {
+            Toast.makeText(this, "QR code is not ready", Toast.LENGTH_SHORT).show()
+            return
+        }
+        when (val result = ImageSaver.saveToGallery(this, bitmap)) {
+            ImageSaver.SaveResult.Success -> {
+                Toast.makeText(this, "Saved to gallery", Toast.LENGTH_SHORT).show()
+            }
+            ImageSaver.SaveResult.PermissionRequired -> {
+                storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+            is ImageSaver.SaveResult.Error -> {
+                Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun shareQRCode() {
+        if (!::bitmap.isInitialized) {
+            Toast.makeText(this, "QR code is not ready", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val shareIntent = ImageSaver.getShareIntent(this, bitmap)
+        if (shareIntent == null) {
+            Toast.makeText(this, "Share failed", Toast.LENGTH_SHORT).show()
+            return
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share QR Code"))
     }
 
     private fun updateFavoriteIcon() {

@@ -164,7 +164,7 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
             values = mapOf("appInput" to input),
             switches = emptyMap()
         )
-        //TODO 创建二维码
+
         saveHistoryAndOpenResult(input, content)
     }
 

@@ -25,6 +25,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             .hide(createFragment)
             .hide(historyFragment)
             .commit()
+        setBottomBarIcon(TAG_SCAN)
     }
 
     override fun initAction() {
@@ -35,11 +36,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private fun showFragment(tag: String) {
+        setBottomBarIcon(tag)
         val tx = supportFragmentManager.beginTransaction()
         listOf(scanFragment, createFragment, historyFragment).forEach { frag ->
-            if (frag.tag == tag) tx.show(frag) else tx.hide(frag)
+            if (frag.tag == tag){
+                tx.show(frag)
+            }  else{
+                tx.hide(frag)
+            }
         }
         tx.commit()
+    }
+
+    private fun setBottomBarIcon(tag: String){
+        binding.bottomBar.iconScan.setImageResource(R.mipmap.ic_scan)
+        binding.bottomBar.iconHistory.setImageResource(R.mipmap.ic_history)
+        binding.bottomBar.iconCreate.setImageResource(R.mipmap.ic_create)
+        binding.bottomBar.iconSetting.setImageResource(R.mipmap.ic_setting)
+        when(tag){
+            TAG_SCAN->binding.bottomBar.iconScan.setImageResource(R.mipmap.ic_scan_selected)
+            TAG_HISTORY->binding.bottomBar.iconHistory.setImageResource(R.mipmap.ic_history_selected)
+            TAG_CREATE->binding.bottomBar.iconCreate.setImageResource(R.mipmap.ic_create_selected)
+        }
     }
 
     companion object {
