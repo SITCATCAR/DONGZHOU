@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/image_record_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:scaleType="centerInside"
         android:src="@mipmap/ic_url" />
 
@@ -43,19 +43,33 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_record_time"
+    <LinearLayout
         android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="16:28"
-        android:textColor="@color/history_time_text"
-        android:textSize="12sp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/text_record_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="16:28"
+            android:textColor="@color/gray_text"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+
 
     <ImageView
         android:id="@+id/image_record_favorite"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="10dp"
         android:src="@mipmap/ic_favorites_selected" />
 
