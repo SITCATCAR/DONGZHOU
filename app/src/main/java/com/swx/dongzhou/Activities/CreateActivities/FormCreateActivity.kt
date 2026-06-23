@@ -39,6 +39,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     private lateinit var textValues: Map<String, TextView>
     private lateinit var switches: Map<String, SwitchCompat>
     private var securityPopupWindow: PopupWindow? = null
+    private var prefillText = ""
 
     override fun initData() {
         val typeName = intent.getStringExtra(CreatePageConfigs.EXTRA_CREATE_TYPE)
@@ -47,6 +48,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }.getOrDefault(QRCodeType.Website)
 
         config = CreatePageConfigs.getConfig(type)
+        prefillText = intent.getStringExtra(CreatePageConfigs.EXTRA_PREFILL_TEXT).orEmpty()
     }
 
     override fun initView() {
@@ -147,7 +149,18 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
             handleCreate()
         }
 
+        applyPrefillText()
         setupCreateButtonState()
+    }
+
+    private fun applyPrefillText() {
+        if (config.type != QRCodeType.Text || prefillText.isBlank()) {
+            return
+        }
+        binding.etText.setText(prefillText)
+        binding.etText.setSelection(binding.etText.text.length)
+        binding.tvClipboardTip.text = prefillText
+        binding.layoutClipboardTip.visibility = View.VISIBLE
     }
 
     private fun initViewMaps() {
@@ -228,6 +241,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
             view.visibility = View.GONE
         }
         binding.layoutQuickText.visibility = if (config.showQuickText) View.VISIBLE else View.GONE
+        binding.layoutClipboardTip.visibility = View.GONE
         binding.layoutSecurityDropdown.visibility = View.GONE
         securityDropdownVisible = false
 

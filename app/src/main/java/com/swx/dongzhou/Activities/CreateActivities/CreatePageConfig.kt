@@ -41,6 +41,7 @@ data class CreatePageConfig(
 
 object CreatePageConfigs {
     const val EXTRA_CREATE_TYPE = "extra_create_type"
+    const val EXTRA_PREFILL_TEXT = "extra_prefill_text"
 
     fun getConfig(type: QRCodeType): CreatePageConfig {
         return when (type) {

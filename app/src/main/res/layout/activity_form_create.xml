@@ -208,6 +208,38 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layoutClipboardTip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="-4dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="top"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="2dp"
+                    android:tint="@color/blue_text"
+                    app:srcCompat="@mipmap/ic_result_copy" />
+
+                <TextView
+                    android:id="@+id/tvClipboardTip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:textColor="@color/blue_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="a spoken or written representation or a account of a person, object, or event" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/layoutName"
                 style="@style/CreateInputRow"
                 android:visibility="gone">
