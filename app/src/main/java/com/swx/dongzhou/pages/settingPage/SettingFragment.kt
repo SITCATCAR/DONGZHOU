@@ -2,6 +2,7 @@ package com.swx.dongzhou.pages.settingPage
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.swx.dongzhou.App
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.MainActivity
 import com.swx.dongzhou.R
@@ -29,7 +30,7 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(
 
     private fun setDarkMode(enabled: Boolean) {
         isDarkMode = enabled
-        requireContext()
+        App.context
             .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putBoolean(KEY_DARK_MODE, enabled)
@@ -57,7 +58,7 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(
     }
 
     private fun getSavedDarkMode(): Boolean {
-        return requireContext()
+        return App.context
             .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getBoolean(KEY_DARK_MODE, false)
     }

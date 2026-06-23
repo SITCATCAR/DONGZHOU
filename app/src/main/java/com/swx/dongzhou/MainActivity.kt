@@ -1,6 +1,5 @@
 package com.swx.dongzhou
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.swx.dongzhou.databinding.ActivityMainBinding
@@ -21,7 +20,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     override fun initData() {
-        val isDarkMode = getSharedPreferences(SettingFragment.PREFS_NAME, Context.MODE_PRIVATE)
+        val isDarkMode = App.context.getSharedPreferences(SettingFragment.PREFS_NAME, MODE_PRIVATE)
             .getBoolean(SettingFragment.KEY_DARK_MODE, false)
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkMode) {

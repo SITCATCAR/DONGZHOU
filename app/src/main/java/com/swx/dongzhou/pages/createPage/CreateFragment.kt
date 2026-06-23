@@ -7,6 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.swx.dongzhou.Activities.CreateActivities.CreatePageConfigs
 import com.swx.dongzhou.Activities.CreateActivities.FormCreateActivity
+import com.swx.dongzhou.App
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.QRCodeType
@@ -126,14 +127,14 @@ class CreateFragment: BaseFragment<CreateFragmentBinding>(CreateFragmentBinding:
     }
 
     private fun getSavedClipboardText(): String {
-        return requireContext()
+        return App.context
             .getSharedPreferences(CLIPBOARD_PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_CLIPBOARD_TEXT, "")
             .orEmpty()
     }
 
     private fun saveClipboardText(text: String) {
-        requireContext()
+        App.context
             .getSharedPreferences(CLIPBOARD_PREFS_NAME, Context.MODE_PRIVATE)
             .edit {
                 putString(KEY_CLIPBOARD_TEXT, text)

@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.swx.dongzhou.Activities.ScanResultActivity
 import com.swx.dongzhou.Activities.CreateActivities.CreatePageConfigs
+import com.swx.dongzhou.App
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
@@ -121,7 +122,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         lifecycleScope.launch {
             try {
                 val histories = withContext(Dispatchers.IO) {
-                    val dao = HistoryDatabase.getDatabase(requireContext()).HistoryDao()
+                    val dao = HistoryDatabase.getDatabase(App.context).HistoryDao()
                     if (selectedTypes.isEmpty()) {
                         dao.selectAll()
                     } else {
@@ -132,7 +133,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
                 rawHistories.addAll(histories.sortedByDescending { history -> history.createdAt })
                 applyHistoryList()
             } catch (e: Exception) {
-                Toast.makeText(context, "Load history failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(App.context, "Load history failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -229,7 +230,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    HistoryDatabase.getDatabase(requireContext()).HistoryDao().updateFavorite(
+                    HistoryDatabase.getDatabase(App.context).HistoryDao().updateFavorite(
                         id = item.id,
                         isFavorite = !item.isFavorite,
                         favoriteAt = if (item.isFavorite) null else System.currentTimeMillis()
@@ -237,7 +238,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
                 }
                 loadHistories()
             } catch (e: Exception) {
-                Toast.makeText(context, "Update favorite failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(App.context, "Update favorite failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -279,7 +280,9 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
 
     private fun confirmDeleteSelected() {
         if (selectedIds.isEmpty()) {
-            Toast.makeText(context, "Please select history", Toast.LENGTH_SHORT).show()
+            context?.let { safeContext ->
+                Toast.makeText(safeContext, "Please select history", Toast.LENGTH_SHORT).show()
+            }
             return
         }
         AlertDialog.Builder(requireContext())
@@ -297,12 +300,12 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    HistoryDatabase.getDatabase(requireContext()).HistoryDao().deleteByIds(ids)
+                    HistoryDatabase.getDatabase(App.context).HistoryDao().deleteByIds(ids)
                 }
                 stateMachine.changeState(HistoryNormalState(getCurrentContentMode()))
                 loadHistories()
             } catch (e: Exception) {
-                Toast.makeText(context, "Delete history failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(App.context, "Delete history failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
