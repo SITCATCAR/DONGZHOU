@@ -83,7 +83,7 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
             toggleFlash()
         }
         binding.btnBatch.setOnClickListener {
-            Toast.makeText(requireContext(), "Batch scan is not ready", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),"Batch scan is not ready", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -10,8 +10,9 @@
 
     <!-- 扫描页 -->
     <color name="scan_blue">#0188FE</color>
-    <color name="scan_mask">#A6000000</color>
+    <color name="scan_mask">#4D000000</color>
     <color name="scan_action_bg">#CC000000</color>
     <color name="scan_action_bg_pressed">#99000000</color>
     <color name="scan_hint_text">#E6FFFFFF</color>
+    <color name="scan_icon_bg">#282322</color>
 </resources>

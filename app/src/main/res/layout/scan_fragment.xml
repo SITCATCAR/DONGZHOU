@@ -4,20 +4,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:keepScreenOn="true">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/scanBox"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -27,7 +25,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.3" >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="15.11dp"
+            android:layout_height="15.11dp"
+            app:srcCompat="@drawable/scan_frame_tl"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="15.11dp"
+            android:layout_height="15.11dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/scan_frame_tr"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="15.11dp"
+            android:layout_height="15.11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/scan_frame_bl"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="15.11dp"
+        android:layout_height="15.11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/scan_frame_br"/>
+
+        <com.swx.dongzhou.pages.scanPage.ScanView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/maskTop"
@@ -70,16 +102,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-    <ImageView
-        android:id="@+id/scanFrame"
-        android:layout_width="266dp"
-        android:layout_height="266dp"
-        android:contentDescription="@null"
-        android:src="@drawable/scan_corner_frame"
-        app:layout_constraintTop_toTopOf="@id/scanBox"
-        app:layout_constraintBottom_toBottomOf="@id/scanBox"
-        app:layout_constraintStart_toStartOf="@id/scanBox"
-        app:layout_constraintEnd_toEndOf="@id/scanBox" />
 
 
     <TextView
@@ -96,9 +118,9 @@
 
     <ImageButton
         android:id="@+id/btnZoomReduce"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="24dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/scan_zoom_reduce"
@@ -125,9 +147,9 @@
 
     <ImageButton
         android:id="@+id/btnZoomAdd"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="24dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="32dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/scan_zoom_add"
         android:scaleType="centerInside"
@@ -138,51 +160,90 @@
 
     <LinearLayout
         android:id="@+id/actionBar"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:background="@drawable/scan_icon_bg"
+        android:layout_marginTop="27dp"
         android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/btnZoomReduce"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <ImageButton
-            android:id="@+id/btnGallery"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_scan_action_button"
-            android:contentDescription="@string/scan_action_gallery"
-            android:padding="12dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_scan_gallery" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btnGallery"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_scan_gallery" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gallery"
+                android:textColor="@color/white"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
+
+
+
+        <Space
+            android:layout_width="28dp"
+            android:layout_height="50dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btnFlash"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_scan_lighting" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Flashing"
+                android:textColor="@color/white"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
+
 
         <Space
             android:layout_width="28dp"
             android:layout_height="50dp" />
 
-        <ImageButton
-            android:id="@+id/btnFlash"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_scan_action_button"
-            android:contentDescription="@string/scan_action_flashlight"
-            android:padding="12dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_scan_lighting" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <Space
-            android:layout_width="28dp"
-            android:layout_height="50dp" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btnBatch"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_scan_batch" />
 
-        <ImageButton
-            android:id="@+id/btnBatch"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_scan_action_button"
-            android:contentDescription="@string/scan_action_batch"
-            android:padding="12dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_scan_batch" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Batch"
+                android:textColor="@color/white"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
