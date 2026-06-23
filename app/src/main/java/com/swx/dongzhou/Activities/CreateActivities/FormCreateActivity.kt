@@ -1,5 +1,7 @@
 package com.swx.dongzhou.Activities.CreateActivities
 
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -40,6 +42,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     private lateinit var switches: Map<String, SwitchCompat>
     private var securityPopupWindow: PopupWindow? = null
     private var prefillText = ""
+    private var clipboardTipText = ""
 
     override fun initData() {
         val typeName = intent.getStringExtra(CreatePageConfigs.EXTRA_CREATE_TYPE)
@@ -48,7 +51,11 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }.getOrDefault(QRCodeType.Website)
 
         config = CreatePageConfigs.getConfig(type)
+        //接收传入的粘贴板内容
         prefillText = intent.getStringExtra(CreatePageConfigs.EXTRA_PREFILL_TEXT).orEmpty()
+        if (type == QRCodeType.Text) {
+            clipboardTipText = prefillText.ifBlank { getClipboardText() }
+        }
     }
 
     override fun initView() {
@@ -149,18 +156,49 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
             handleCreate()
         }
 
-        applyPrefillText()
+        binding.layoutClipboardTip.setOnClickListener {
+            appendClipboardTipToInput()
+        }
+
+        applyClipboardContent()
         setupCreateButtonState()
     }
 
-    private fun applyPrefillText() {
-        if (config.type != QRCodeType.Text || prefillText.isBlank()) {
+    private fun applyClipboardContent() {
+        if (config.type != QRCodeType.Text) {
             return
         }
-        binding.etText.setText(prefillText)
-        binding.etText.setSelection(binding.etText.text.length)
-        binding.tvClipboardTip.text = prefillText
+        if (prefillText.isNotBlank()) {
+            binding.etText.setText(prefillText)
+            binding.etText.setSelection(binding.etText.text.length)
+        }
+        updateClipboardTip()
+        binding.root.postDelayed({
+            val latestClipboardText = getClipboardText()
+            if (latestClipboardText.isNotBlank()) {
+                clipboardTipText = latestClipboardText
+                updateClipboardTip()
+            }
+        }, CLIPBOARD_REFRESH_DELAY)
+    }
+
+    private fun updateClipboardTip() {
+        val tipText = clipboardTipText.ifBlank { prefillText }
+        if (tipText.isBlank()) {
+            binding.layoutClipboardTip.visibility = View.GONE
+            return
+        }
+        binding.tvClipboardTip.text = tipText
         binding.layoutClipboardTip.visibility = View.VISIBLE
+    }
+
+    private fun appendClipboardTipToInput() {
+        val tipText = binding.tvClipboardTip.text?.toString().orEmpty()
+        if (tipText.isBlank()) {
+            return
+        }
+        binding.etText.append(tipText)
+        binding.etText.setSelection(binding.etText.text.length)
     }
 
     private fun initViewMaps() {
@@ -439,9 +477,22 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         return (value * resources.displayMetrics.density).toInt()
     }
 
+    private fun getClipboardText(): String {
+        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = clipboardManager.primaryClip ?: return ""
+        if (clipData.itemCount <= 0) {
+            return ""
+        }
+        return clipData.getItemAt(0).coerceToText(this)?.toString()?.trim().orEmpty()
+    }
+
     override fun onDestroy() {
         securityPopupWindow?.dismiss()
         securityPopupWindow = null
         super.onDestroy()
+    }
+
+    companion object {
+        private const val CLIPBOARD_REFRESH_DELAY = 300L
     }
 }
