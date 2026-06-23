@@ -7,6 +7,11 @@
     <color name="blue_text">#0188FE</color>
     <color name="black_text">#171718</color>
     <color name="history_background">#EEF1F4</color>
+    <color name="setting_background">#EEF1F4</color>
+    <color name="setting_divider">#DDE2EA</color>
+    <color name="setting_switch_off">#D3D5D8</color>
+    <color name="setting_switch_on_track">#8ED0FF</color>
+    <color name="setting_star">#F5A623</color>
 
     <!-- 扫描页 -->
     <color name="scan_blue">#0188FE</color>
