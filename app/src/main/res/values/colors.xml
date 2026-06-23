@@ -7,7 +7,15 @@
     <color name="blue_text">#0188FE</color>
     <color name="black_text">#171718</color>
     <color name="history_background">#EEF1F4</color>
+    <color name="app_background">#F5F6FA</color>
+    <color name="app_surface">#FFFFFFFF</color>
+    <color name="app_input_background">#EAEDF1</color>
+    <color name="app_icon_placeholder">#EEF1F6</color>
+    <color name="app_border">#E5E7EC</color>
+    <color name="bottom_bar_background">#FFFFFFFF</color>
     <color name="setting_background">#EEF1F4</color>
+    <color name="setting_section_background">#FFFFFFFF</color>
+    <color name="setting_primary_text">#171718</color>
     <color name="setting_divider">#DDE2EA</color>
     <color name="setting_switch_off">#D3D5D8</color>
     <color name="setting_switch_on_track">#8ED0FF</color>

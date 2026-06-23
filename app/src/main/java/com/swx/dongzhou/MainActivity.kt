@@ -1,5 +1,7 @@
 package com.swx.dongzhou
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.swx.dongzhou.databinding.ActivityMainBinding
 import com.swx.dongzhou.pages.createPage.CreateFragment
@@ -14,7 +16,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private lateinit var historyFragment: HistoryFragment
     private lateinit var settingFragment: SettingFragment
 
+    fun openSettingAfterRecreate() {
+        intent.putExtra(EXTRA_OPEN_SETTING, true)
+    }
+
+    override fun initData() {
+        val isDarkMode = getSharedPreferences(SettingFragment.PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(SettingFragment.KEY_DARK_MODE, false)
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDarkMode) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+    }
+
     override fun initView() {
+        val shouldOpenSetting = intent.getBooleanExtra(EXTRA_OPEN_SETTING, false)
+        intent.putExtra(EXTRA_OPEN_SETTING, false)
+
         scanFragment = ScanFragment()
         createFragment = CreateFragment()
         historyFragment = HistoryFragment()
@@ -27,9 +48,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             .add(R.id.fragmentHolder, settingFragment, TAG_SETTING)
             .hide(createFragment)
             .hide(historyFragment)
-            .hide(settingFragment)
+            .hide(if (shouldOpenSetting) scanFragment else settingFragment)
             .commit()
-        setBottomBarIcon(TAG_SCAN)
+        setBottomBarIcon(if (shouldOpenSetting) TAG_SETTING else TAG_SCAN)
     }
 
     override fun initAction() {
@@ -92,5 +113,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         private const val TAG_HISTORY = "history"
         private const val TAG_CREATE = "create"
         private const val TAG_SETTING = "setting"
+        private const val EXTRA_OPEN_SETTING = "extra_open_setting"
     }
 }

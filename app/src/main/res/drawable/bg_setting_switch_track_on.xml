@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <size
+        android:width="47dp"
+        android:height="18dp" />
+
+    <solid android:color="@color/setting_switch_on_track" />
+
+    <corners android:radius="9dp" />
+
+</shape>
