@@ -201,7 +201,13 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
             }
 
         historyAdapter.setItems(groups)
+        updateEmptyHistory(displayHistories.isEmpty())
         updateSelectAllIcon()
+    }
+
+    private fun updateEmptyHistory(isEmpty: Boolean) {
+        binding.layoutEmptyHistory.isVisible = isEmpty
+        binding.historyRecyclerView.isVisible = !isEmpty
     }
 
     private fun History.toRecordItem(): HistoryRecordItem {
