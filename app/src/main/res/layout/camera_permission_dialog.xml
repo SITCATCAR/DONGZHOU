@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_16"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="30dp"
+    android:paddingTop="30dp"
+    android:paddingEnd="30dp"
+    android:paddingBottom="26dp">
+
+    <TextView
+        android:id="@+id/text_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Camera permission"
+        android:textColor="@color/black_text"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_dialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:text="Camera permission is needed\nto scan QR codes."
+        android:textColor="@color/gray_text"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/text_dialog_allow"
+        android:layout_width="252dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/bg_button_enable"
+        android:gravity="center"
+        android:text="Request again"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_dialog_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Exit app"
+        android:textColor="@color/gray_text"
+        android:textSize="16sp" />
+
+</LinearLayout>

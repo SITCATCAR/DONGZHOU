@@ -2,11 +2,19 @@ package com.swx.dongzhou.pages.scanPage
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.provider.Settings
 import android.util.Log
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.Camera
@@ -15,6 +23,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.mlkit.vision.barcode.BarcodeScanner
@@ -25,6 +34,7 @@ import com.swx.dongzhou.Activities.ScanResultActivity
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
+import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ScanFragmentBinding
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import androidx.core.content.edit
 
 class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::inflate) {
 
@@ -48,14 +59,18 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     private var lastScanTime = 0L
     private lateinit var cameraExecutor: ExecutorService
     private var scanner: BarcodeScanner? = null
+    private var cameraPermissionDialog: Dialog? = null
+    private var isRequestingCameraPermission = false
+    private var shouldRetryCameraPermissionAfterSettings = false
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
+        isRequestingCameraPermission = false
         if (granted) {
             startCamera()
         } else {
-            Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
+            showCameraPermissionDialog()
         }
     }
     private val pickImageLauncher = registerForActivityResult(
@@ -72,7 +87,6 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         scanner = BarcodeScanning.getClient()
         initActionButtons()
         initZoomSeekBar()
-        requestCameraPermission()
     }
 
     private fun initActionButtons() {
@@ -109,15 +123,112 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     }
 
     private fun requestCameraPermission() {
+        if (isRequestingCameraPermission || cameraPermissionDialog?.isShowing == true) {
+            return
+        }
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             startCamera()
+        } else if (hasRequestedCameraPermission()) {
+            showCameraPermissionDialog()
         } else {
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            launchCameraPermission()
         }
+    }
+
+    private fun showCameraPermissionDialog() {
+        if (!isBindingAvailable || cameraPermissionDialog?.isShowing == true) {
+            return
+        }
+        val dialogView = layoutInflater.inflate(R.layout.camera_permission_dialog, null)
+        val dialog = Dialog(requireContext())
+        cameraPermissionDialog = dialog
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(dialogView)
+        dialog.setCancelable(false)
+
+        //多次拒绝后会直接拒绝相机权限，需要去系统app设置页将相机权限改为ask或者允许
+        val allowButton = dialogView.findViewById<TextView>(R.id.text_dialog_allow)
+        allowButton.text = if (shouldOpenCameraSettings()) {
+            "Open settings"
+        } else {
+            "Request again"
+        }
+        allowButton.setOnClickListener {
+            dialog.dismiss()
+            cameraPermissionDialog = null
+            if (shouldOpenCameraSettings()) {
+                openAppSettings()
+            } else {
+                binding.root.postDelayed({
+                    if (isBindingAvailable) {
+                        shouldRetryCameraPermissionAfterSettings = false
+                        launchCameraPermission()
+                    }
+                }, PERMISSION_RETRY_DELAY)
+            }
+        }
+        dialogView.findViewById<TextView>(R.id.text_dialog_exit).setOnClickListener {
+            dialog.dismiss()
+            cameraPermissionDialog = null
+            activity?.finishAffinity()
+        }
+        dialog.setOnDismissListener {
+            if (cameraPermissionDialog == dialog) {
+                cameraPermissionDialog = null
+            }
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(resources.displayMetrics.widthPixels - dp(40), ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    private fun launchCameraPermission() {
+        isRequestingCameraPermission = true
+        setHasRequestedCameraPermission()
+        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+    }
+
+    private fun hasRequestedCameraPermission(): Boolean {
+        return requireContext()
+            .getSharedPreferences(PERMISSION_PREFERENCES, Context.MODE_PRIVATE)
+            .getBoolean(KEY_HAS_REQUESTED_CAMERA_PERMISSION, false)
+    }
+
+    private fun setHasRequestedCameraPermission() {
+        requireContext()
+            .getSharedPreferences(PERMISSION_PREFERENCES, Context.MODE_PRIVATE)
+            .edit {
+                putBoolean(KEY_HAS_REQUESTED_CAMERA_PERMISSION, true)
+            }
+    }
+
+    private fun isCameraPermissionPermanentlyDenied(): Boolean {
+        val isDenied = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_DENIED
+        val shouldShowRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(),
+            Manifest.permission.CAMERA
+        )
+        return isDenied && hasRequestedCameraPermission() && !shouldShowRationale
+    }
+
+    private fun shouldOpenCameraSettings(): Boolean {
+        return isCameraPermissionPermanentlyDenied() && !shouldRetryCameraPermissionAfterSettings
+    }
+
+    private fun openAppSettings() {
+        shouldRetryCameraPermissionAfterSettings = true
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", requireContext().packageName, null)
+        )
+        startActivity(intent)
     }
 
     private fun startCamera() {
@@ -343,6 +454,10 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         }
     }
 
+    private fun dp(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
+    }
+
     fun openCamera() {
         requestCameraPermission()
     }
@@ -364,7 +479,11 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         super.onResume()
         isScanning = false
         if (!isHidden && isBindingAvailable) {
-            openCamera()
+            binding.root.post {
+                if (!isHidden && isBindingAvailable) {
+                    openCamera()
+                }
+            }
         }
     }
 
@@ -386,6 +505,8 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
     }
 
     override fun onDestroyView() {
+        cameraPermissionDialog?.dismiss()
+        cameraPermissionDialog = null
         closeCamera()
         scanner?.close()
         scanner = null
@@ -400,5 +521,8 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         private const val MAX_ZOOM_RATIO = 4.0f
         private const val DISABLED_BUTTON_ALPHA = 0.4f
         private const val SCAN_DEBOUNCE_TIME = 2500L
+        private const val PERMISSION_RETRY_DELAY = 300L
+        private const val PERMISSION_PREFERENCES = "permission_preferences"
+        private const val KEY_HAS_REQUESTED_CAMERA_PERMISSION = "has_requested_camera_permission"
     }
 }
