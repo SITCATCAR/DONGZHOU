@@ -323,7 +323,7 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
         }
         val popupContent = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = getDrawable(R.drawable.bg_history_card)
+            background = getDrawable(R.drawable.bg_card_16)
             setPadding(0, dp(10), 0, dp(10))
         }
 

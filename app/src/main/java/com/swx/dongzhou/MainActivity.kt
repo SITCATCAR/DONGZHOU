@@ -1,5 +1,6 @@
 package com.swx.dongzhou
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.swx.dongzhou.databinding.ActivityMainBinding
@@ -15,20 +16,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private lateinit var historyFragment: HistoryFragment
     private lateinit var settingFragment: SettingFragment
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //在onCreate中需要在最前面，避免重复创建Activity
+        applySavedNightMode()
+        super.onCreate(savedInstanceState)
+    }
+
     fun openSettingAfterRecreate() {
         intent.putExtra(EXTRA_OPEN_SETTING, true)
     }
 
     override fun initData() {
+    }
+
+    private fun applySavedNightMode() {
         val isDarkMode = App.context.getSharedPreferences(SettingFragment.PREFS_NAME, MODE_PRIVATE)
             .getBoolean(SettingFragment.KEY_DARK_MODE, false)
-        AppCompatDelegate.setDefaultNightMode(
-            if (isDarkMode) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
+        val nightMode = if (isDarkMode) {
+            AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            AppCompatDelegate.MODE_NIGHT_NO
+        }
+        //判断需不需要切换，切换会重建activity
+        if (AppCompatDelegate.getDefaultNightMode() != nightMode) {
+            AppCompatDelegate.setDefaultNightMode(nightMode)
+        }
     }
 
     override fun initView() {

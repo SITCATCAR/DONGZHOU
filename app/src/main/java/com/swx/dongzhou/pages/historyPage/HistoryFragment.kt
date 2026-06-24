@@ -3,6 +3,7 @@ package com.swx.dongzhou.pages.historyPage
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +74,6 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         stateMachine = HistoryStateMachine(this)
         stateMachine.changeState(HistoryNormalState())
         initAction()
-        loadHistories()
     }
 
     override fun loadData() {
@@ -119,7 +119,10 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
     }
 
     private fun loadHistories() {
-        lifecycleScope.launch {
+        if (!isBindingAvailable) {
+            return
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val histories = withContext(Dispatchers.IO) {
                     val dao = HistoryDatabase.getDatabase(App.context).HistoryDao()
@@ -133,7 +136,12 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
                 rawHistories.addAll(histories.sortedByDescending { history -> history.createdAt })
                 applyHistoryList()
             } catch (e: Exception) {
-                Toast.makeText(App.context, "Load history failed", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Load histories failed", e)
+                if (!isHidden && isResumed) {
+                    context?.let { safeContext ->
+                        Toast.makeText(safeContext, "Load history failed", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
@@ -406,5 +414,9 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         filterPopupWindow?.dismiss()
         filterPopupWindow = null
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val TAG = "HistoryFragment"
     }
 }
