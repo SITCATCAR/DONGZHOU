@@ -1,5 +1,6 @@
 package com.swx.dongzhou.pages.historyPage
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,13 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -309,14 +310,23 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
             }
             return
         }
-        AlertDialog.Builder(requireContext())
-            .setTitle("Delete")
-            .setMessage("Delete ${selectedIds.size} selected history?")
-            .setPositiveButton("Delete") { _, _ ->
-                deleteSelected()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.history_delete_dialog, null)
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(dialogView)
+
+        dialogView.findViewById<TextView>(R.id.text_dialog_message).text =
+            "Are you sure want to clear\n${selectedIds.size} selected history?"
+        dialogView.findViewById<TextView>(R.id.text_dialog_yes).setOnClickListener {
+            dialog.dismiss()
+            deleteSelected()
+        }
+        dialogView.findViewById<TextView>(R.id.text_dialog_no).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(resources.displayMetrics.widthPixels - dp(40), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun deleteSelected() {
