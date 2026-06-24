@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.swx.dongzhou.App
 import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.MainActivity
-import com.swx.dongzhou.R
 import com.swx.dongzhou.databinding.SettingFragmentBinding
 
 class SettingFragment : BaseFragment<SettingFragmentBinding>(
@@ -16,12 +15,12 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(
 
     override fun initView() {
         isDarkMode = getSavedDarkMode()
-        updateDarkModeSwitch()
+        binding.darkModeSwitch.isChecked = isDarkMode
         binding.layoutDarkMode.setOnClickListener {
-            setDarkMode(!isDarkMode)
+            binding.darkModeSwitch.isChecked = !binding.darkModeSwitch.isChecked
         }
-        binding.layoutDarkModeSwitch.setOnClickListener {
-            setDarkMode(!isDarkMode)
+        binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            setDarkMode(isChecked)
         }
     }
 
@@ -35,7 +34,6 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(
             .edit()
             .putBoolean(KEY_DARK_MODE, enabled)
             .apply()
-        updateDarkModeSwitch()
         (requireActivity() as? MainActivity)?.openSettingAfterRecreate()
         AppCompatDelegate.setDefaultNightMode(
             if (enabled) {
@@ -46,30 +44,14 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(
         )
     }
 
-    private fun updateDarkModeSwitch() {
-        binding.viewDarkModeTrack.setBackgroundResource(
-            if (isDarkMode) {
-                R.drawable.bg_setting_switch_track_on
-            } else {
-                R.drawable.bg_setting_switch_track_off
-            }
-        )
-        binding.viewDarkModeThumb.translationX = if (isDarkMode) dp(SWITCH_THUMB_OFFSET) else 0f
-    }
-
     private fun getSavedDarkMode(): Boolean {
         return App.context
             .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getBoolean(KEY_DARK_MODE, false)
     }
 
-    private fun dp(value: Int): Float {
-        return value * resources.displayMetrics.density
-    }
-
     companion object {
         const val PREFS_NAME = "setting_prefs"
         const val KEY_DARK_MODE = "key_dark_mode"
-        private const val SWITCH_THUMB_OFFSET = 21
     }
 }
