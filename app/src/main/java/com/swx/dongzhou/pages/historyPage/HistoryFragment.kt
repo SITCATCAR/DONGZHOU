@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,6 +62,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
     }
 
     override fun initView() {
+        initDarkModel()
         historyAdapter = HistoryAdapter(
             itemList = historyList,
             onItemClick = ::onItemClick,
@@ -74,6 +76,13 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         stateMachine = HistoryStateMachine(this)
         stateMachine.changeState(HistoryNormalState())
         initAction()
+        loadHistories()
+    }
+
+    private fun initDarkModel(){
+        if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
+            binding.imageBack.setImageResource(R.mipmap.ic_results_page_return_white)
+        }
     }
 
     override fun loadData() {

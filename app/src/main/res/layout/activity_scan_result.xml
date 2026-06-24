@@ -99,7 +99,7 @@
         android:id="@+id/layoutActionButtons"
         android:layout_width="0dp"
         android:layout_height="86dp"
-        android:background="@color/app_surface"
+        android:background="@color/bg_white"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"

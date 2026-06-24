@@ -1,8 +1,9 @@
 package com.swx.dongzhou
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import com.swx.dongzhou.Util.ThemeModeManager
 import com.swx.dongzhou.databinding.ActivityMainBinding
 import com.swx.dongzhou.pages.createPage.CreateFragment
 import com.swx.dongzhou.pages.historyPage.HistoryFragment
@@ -11,15 +12,30 @@ import com.swx.dongzhou.pages.settingPage.SettingFragment
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
-    private lateinit var scanFragment: ScanFragment
-    private lateinit var createFragment: CreateFragment
-    private lateinit var historyFragment: HistoryFragment
-    private lateinit var settingFragment: SettingFragment
+    //懒加载fragment，避免切换dark模式后退出重新打开rcv不应用dark颜色
+    private val scanFragment by lazy {
+        supportFragmentManager.findFragmentByTag(TAG_SCAN) as? ScanFragment ?: ScanFragment()
+    }
+    private val createFragment by lazy {
+        supportFragmentManager.findFragmentByTag(TAG_CREATE) as? CreateFragment ?: CreateFragment()
+    }
+    private val historyFragment by lazy {
+        supportFragmentManager.findFragmentByTag(TAG_HISTORY) as? HistoryFragment ?: HistoryFragment()
+    }
+    private val settingFragment by lazy {
+        supportFragmentManager.findFragmentByTag(TAG_SETTING) as? SettingFragment ?: SettingFragment()
+    }
+    private var currentTag = TAG_SCAN
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //在onCreate中需要在最前面，避免重复创建Activity
-        applySavedNightMode()
+        ThemeModeManager.applySavedNightMode(this)
+        currentTag = savedInstanceState?.getString(KEY_CURRENT_TAG) ?: TAG_SCAN
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(KEY_CURRENT_TAG, currentTag)
+        super.onSaveInstanceState(outState)
     }
 
     fun openSettingAfterRecreate() {
@@ -29,39 +45,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun initData() {
     }
 
-    private fun applySavedNightMode() {
-        val isDarkMode = App.context.getSharedPreferences(SettingFragment.PREFS_NAME, MODE_PRIVATE)
-            .getBoolean(SettingFragment.KEY_DARK_MODE, false)
-        val nightMode = if (isDarkMode) {
-            AppCompatDelegate.MODE_NIGHT_YES
-        } else {
-            AppCompatDelegate.MODE_NIGHT_NO
-        }
-        //判断需不需要切换，切换会重建activity
-        if (AppCompatDelegate.getDefaultNightMode() != nightMode) {
-            AppCompatDelegate.setDefaultNightMode(nightMode)
-        }
-    }
-
     override fun initView() {
         val shouldOpenSetting = intent.getBooleanExtra(EXTRA_OPEN_SETTING, false)
         intent.putExtra(EXTRA_OPEN_SETTING, false)
 
-        scanFragment = ScanFragment()
-        createFragment = CreateFragment()
-        historyFragment = HistoryFragment()
-        settingFragment = SettingFragment()
-
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentHolder, scanFragment, TAG_SCAN)
-            .add(R.id.fragmentHolder, createFragment, TAG_CREATE)
-            .add(R.id.fragmentHolder, historyFragment, TAG_HISTORY)
-            .add(R.id.fragmentHolder, settingFragment, TAG_SETTING)
-            .hide(createFragment)
-            .hide(historyFragment)
-            .hide(if (shouldOpenSetting) scanFragment else settingFragment)
-            .commit()
-        setBottomBarIcon(if (shouldOpenSetting) TAG_SETTING else TAG_SCAN)
+        showFragment(if (shouldOpenSetting) TAG_SETTING else currentTag)
     }
 
     override fun initAction() {
@@ -73,16 +61,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private fun showFragment(tag: String) {
+        val targetFragment = getOrCreateFragment(tag)
         setBottomBarIcon(tag)
         val tx = supportFragmentManager.beginTransaction()
-        listOf(scanFragment, createFragment, historyFragment, settingFragment).forEach { frag ->
-            if (frag.tag == tag) {
-                tx.show(frag)
-            } else {
-                tx.hide(frag)
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment != targetFragment && fragment.isAdded) {
+                tx.hide(fragment)
             }
         }
+        if (targetFragment.isAdded) {
+            tx.show(targetFragment)
+        } else {
+            tx.add(R.id.fragmentHolder, targetFragment, tag)
+        }
         tx.commit()
+        currentTag = tag
+    }
+
+    private fun getOrCreateFragment(tag: String): Fragment {
+        return when (tag) {
+            TAG_SCAN -> scanFragment
+            TAG_HISTORY -> historyFragment
+            TAG_CREATE -> createFragment
+            TAG_SETTING -> settingFragment
+            else -> scanFragment
+        }
     }
 
     private fun setBottomBarIcon(tag: String) {
@@ -125,5 +128,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         private const val TAG_CREATE = "create"
         private const val TAG_SETTING = "setting"
         private const val EXTRA_OPEN_SETTING = "extra_open_setting"
+        private const val KEY_CURRENT_TAG = "key_current_tag"
     }
 }

@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.Activities.CreateResultActivity
@@ -41,6 +42,7 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
 
     override fun initView() {
         enableInsetsView(binding.root, top = true, bottom = true)
+        initDarkModel()
         binding.tvTitle.text = config.title
         binding.ivAppIcon.setImageResource(config.iconRes)
         binding.tvOpenTag.visibility = if (config.showOpenTag) View.VISIBLE else View.GONE
@@ -60,6 +62,13 @@ class AppCreateActivity : BaseActivity<ActivityAppCreateBinding>(
 
         initTabs()
         updateAppHint()
+    }
+
+    //返回箭头是图片，dark模式只能更换图片。
+    private fun initDarkModel(){
+        if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
+            binding.btnBack.setImageResource(R.mipmap.ic_results_page_return_white)
+        }
     }
 
     override fun initAction() {

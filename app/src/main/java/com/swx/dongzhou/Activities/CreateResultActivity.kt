@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
@@ -36,6 +37,7 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
     }
 
     override fun initView() {
+        initDarkModel()
         val typeName = intent.getStringExtra("type").orEmpty()
         type = runCatching {
             QRCodeType.valueOf(typeName)
@@ -48,6 +50,13 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
         showQRCode()
         loadFavoriteState()
 
+    }
+
+    //返回箭头是图片，dark模式只能更换图片。
+    private fun initDarkModel(){
+        if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
+            binding.btnBack.setImageResource(R.mipmap.ic_results_page_return_white)
+        }
     }
 
     override fun initAction() {

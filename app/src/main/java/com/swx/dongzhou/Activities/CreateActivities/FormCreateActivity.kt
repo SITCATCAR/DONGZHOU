@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.Activities.CreateResultActivity
@@ -60,9 +61,17 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
 
     override fun initView() {
         enableInsetsView(binding.root, top = true, bottom = true)
+        initDarkModel()
         binding.tvTitle.text = config.title
         initViewMaps()
         initVisibleFields()
+    }
+
+    //返回箭头是图片，dark模式只能更换图片。
+    private fun initDarkModel(){
+        if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
+            binding.btnBack.setImageResource(R.mipmap.ic_results_page_return_white)
+        }
     }
 
     override fun initAction() {

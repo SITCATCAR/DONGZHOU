@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.app.Activity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import com.swx.dongzhou.Activities.CreateActivities.CreatePageConfigs
 import com.swx.dongzhou.BaseActivity
@@ -36,12 +37,19 @@ class ScanResultActivity : BaseActivity<ActivityScanResultBinding>(
     }
 
     override fun initView() {
+        initDarkModel()
         binding.tvTitle.text = CreatePageConfigs.getConfig(type).title
         binding.titleIcon.setImageResource(Utils.getItemImage(type))
         binding.tvContent.text = content
         loadFavoriteState()
     }
 
+    //返回箭头是图片，dark模式只能更换图片。
+    private fun initDarkModel(){
+        if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
+            binding.btnBack.setImageResource(R.mipmap.ic_results_page_return_white)
+        }
+    }
     override fun initAction() {
         binding.btnBack.setOnClickListener {
             finish()
