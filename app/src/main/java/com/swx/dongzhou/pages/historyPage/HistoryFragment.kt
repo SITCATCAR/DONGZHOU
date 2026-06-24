@@ -63,6 +63,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
 
     override fun initView() {
         initDarkModel()
+        enableInsetsView(binding.historyRoot,true,false)
         historyAdapter = HistoryAdapter(
             itemList = historyList,
             onItemClick = ::onItemClick,

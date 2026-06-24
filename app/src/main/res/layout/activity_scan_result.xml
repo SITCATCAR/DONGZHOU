@@ -98,10 +98,12 @@
     <LinearLayout
         android:id="@+id/layoutActionButtons"
         android:layout_width="0dp"
-        android:layout_height="86dp"
+        android:layout_height="wrap_content"
         android:background="@color/bg_white"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

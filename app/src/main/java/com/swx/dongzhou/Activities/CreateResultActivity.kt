@@ -38,6 +38,7 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
 
     override fun initView() {
         initDarkModel()
+        enableInsetsView(binding.main, left = true, top = true, right = true, bottom = false)
         val typeName = intent.getStringExtra("type").orEmpty()
         type = runCatching {
             QRCodeType.valueOf(typeName)

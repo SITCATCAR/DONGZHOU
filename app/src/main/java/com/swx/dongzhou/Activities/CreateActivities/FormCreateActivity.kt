@@ -60,7 +60,8 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     }
 
     override fun initView() {
-        enableInsetsView(binding.root, top = true, bottom = true)
+        enableInsetsView(binding.root, left = true, top = true, right = true, bottom = false)
+        enableInsetsView(binding.layoutCreateButton, left = false, top = false, right = false, bottom = true)
         initDarkModel()
         binding.tvTitle.text = config.title
         initViewMaps()
@@ -386,9 +387,6 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
     private fun updateCreateButtonState() {
         val canCreate = isCreateEnabled()
         binding.btnCreate.isEnabled = canCreate
-        binding.btnCreate.setBackgroundResource(
-            if (canCreate) R.drawable.bg_button_enable else R.drawable.bg_button_unable
-        )
     }
 
     private fun isCreateEnabled(): Boolean {

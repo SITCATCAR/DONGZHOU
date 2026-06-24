@@ -49,9 +49,8 @@ abstract class BaseFragment<vb: ViewBinding>(val infate:(LayoutInflater, ViewGro
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets->
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
 
-            val chosenBottom = if (imeVisible) ime.bottom else systemBars.bottom
+            val chosenBottom = maxOf(ime.bottom, systemBars.bottom)
 
             v.updatePadding(
                 left = initialLeft + systemBars.left,

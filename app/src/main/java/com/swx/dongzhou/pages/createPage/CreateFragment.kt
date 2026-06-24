@@ -26,6 +26,7 @@ class CreateFragment: BaseFragment<CreateFragmentBinding>(CreateFragmentBinding:
 
     override fun initView() {
         addItems()
+        enableInsetsView(binding.createRoot,true,false)
         binding.RCView.layoutManager= GridLayoutManager(context,3)
         binding.RCView.adapter= CreateAdapter(activity,list)
 

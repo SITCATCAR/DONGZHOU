@@ -14,6 +14,7 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(
 
     override fun initView() {
         isDarkMode = getSavedDarkMode()
+        enableInsetsView(binding.settingRoot,true,false)
         binding.darkModeSwitch.isSaveEnabled = false
         binding.darkModeSwitch.isChecked = isDarkMode
         binding.layoutDarkMode.setOnClickListener {

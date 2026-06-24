@@ -37,6 +37,8 @@ class ScanResultActivity : BaseActivity<ActivityScanResultBinding>(
     }
 
     override fun initView() {
+        enableInsetsView(binding.main, left = true, top = true, right = true, bottom = false)
+        enableInsetsView(binding.layoutActionButtons, left = false, top = false, right = false, bottom = true)
         initDarkModel()
         binding.tvTitle.text = CreatePageConfigs.getConfig(type).title
         binding.titleIcon.setImageResource(Utils.getItemImage(type))
