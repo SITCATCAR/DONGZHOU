@@ -5,7 +5,7 @@
     android:id="@+id/create_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background">
+    android:background="@color/bg_gray">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/create_scroll_view"
@@ -48,7 +48,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/bg_create_result_card"
+                android:background="@drawable/bg_card_8"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -90,7 +90,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/bg_create_result_card"
+                android:background="@drawable/bg_card_8"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -169,7 +169,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/bg_create_result_card"
+                android:background="@drawable/bg_card_8"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"

@@ -314,7 +314,7 @@ class HistoryFragment : BaseFragment<HistoryFragmentBinding>(
         val context = requireContext()
         val popupContent = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            background = context.getDrawable(R.drawable.bg_history_card)
+            background = context.getDrawable(R.drawable.bg_card_16)
             setPadding(0, dp(10), 0, dp(10))
         }
 

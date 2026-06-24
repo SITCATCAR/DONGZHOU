@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
+    android:background="@color/bg_gray"
     tools:context=".Activities.ScanResultActivity">
 
     <LinearLayout
@@ -72,7 +72,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="4dp"
-        android:background="@drawable/bg_create_result_card"
+        android:background="@drawable/bg_card_8"
         android:clipToPadding="false"
         android:fillViewport="true"
         android:paddingStart="24dp"
