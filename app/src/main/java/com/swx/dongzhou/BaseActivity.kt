@@ -58,13 +58,7 @@ abstract class BaseActivity<VB : ViewBinding>(val inflate: (LayoutInflater) -> V
             Configuration.UI_MODE_NIGHT_YES
     }
 
-    protected fun enableInsetsView(
-        view: View,
-        left: Boolean,
-        top: Boolean,
-        right: Boolean,
-        bottom: Boolean
-    ) {
+    protected fun enableInsetsView(view: View, left: Boolean, top: Boolean, right: Boolean, bottom: Boolean, includeIme: Boolean = true) {
         val initialLeft = view.paddingLeft
         val initialTop = view.paddingTop
         val initialRight = view.paddingRight
@@ -74,7 +68,11 @@ abstract class BaseActivity<VB : ViewBinding>(val inflate: (LayoutInflater) -> V
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            val chosenBottom = maxOf(ime.bottom, systemBars.bottom)
+            val chosenBottom = if (includeIme) {
+                maxOf(ime.bottom, systemBars.bottom)
+            } else {
+                systemBars.bottom
+            }
 
             v.updatePadding(
                 left = if (left) initialLeft + systemBars.left else initialLeft,

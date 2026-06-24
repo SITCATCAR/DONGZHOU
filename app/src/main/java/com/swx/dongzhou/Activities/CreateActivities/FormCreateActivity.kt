@@ -61,7 +61,8 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
 
     override fun initView() {
         enableInsetsView(binding.root, left = true, top = true, right = true, bottom = false)
-        enableInsetsView(binding.layoutCreateButton, left = false, top = false, right = false, bottom = true)
+        //无视ime insets
+        enableInsetsView(binding.layoutCreateButton, left = false, top = false, right = false, bottom = true, includeIme = false)
         initDarkModel()
         binding.tvTitle.text = config.title
         initViewMaps()

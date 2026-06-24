@@ -39,7 +39,7 @@ abstract class BaseFragment<vb: ViewBinding>(val infate:(LayoutInflater, ViewGro
 
     abstract fun initView()
     abstract fun loadData()
-    protected fun enableInsetsView(view: View, top: Boolean,bottom: Boolean){
+    protected fun enableInsetsView(view: View, top: Boolean,bottom: Boolean, includeIme: Boolean = true){
         // 加上view本身设置的边距,不然会边距丢失
         val initialLeft = view.paddingLeft
         val initialTop = view.paddingTop
@@ -50,7 +50,11 @@ abstract class BaseFragment<vb: ViewBinding>(val infate:(LayoutInflater, ViewGro
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            val chosenBottom = maxOf(ime.bottom, systemBars.bottom)
+            val chosenBottom = if (includeIme) {
+                maxOf(ime.bottom, systemBars.bottom)
+            } else {
+                systemBars.bottom
+            }
 
             v.updatePadding(
                 left = initialLeft + systemBars.left,

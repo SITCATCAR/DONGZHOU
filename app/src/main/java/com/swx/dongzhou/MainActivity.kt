@@ -46,7 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     override fun initView() {
-        enableInsetsView(binding.bottomBar.root, left = false, top = false, right = false, bottom = true)
+        enableInsetsView(binding.bottomBar.root, left = false, top = false, right = false, bottom = true, includeIme = false)
         val shouldOpenSetting = intent.getBooleanExtra(EXTRA_OPEN_SETTING, false)
         intent.putExtra(EXTRA_OPEN_SETTING, false)
 
