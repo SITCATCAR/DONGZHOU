@@ -118,11 +118,17 @@ class ScanResultActivity : BaseActivity<ActivityScanResultBinding>(
     }
 
     private fun updateFavoriteIcon() {
+
+        val favoriteUnselect=if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES)
+            R.mipmap.ic_results_favorite_white
+        else
+            R.mipmap.ic_results_favorites
+
         binding.btnFavorite.setImageResource(
             if (isFavorite) {
                 R.mipmap.ic_favorites_selected
             } else {
-                R.mipmap.ic_results_favorites
+                favoriteUnselect
             }
         )
     }
