@@ -23,6 +23,7 @@ import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.R
+import com.swx.dongzhou.Util.QRCodeTextCodec
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ActivityFormCreateBinding
 import kotlinx.coroutines.Dispatchers
@@ -415,6 +416,10 @@ class FormCreateActivity : BaseActivity<ActivityFormCreateBinding>(
             values = values,
             switches = switchValues
         )
+        if (QRCodeTextCodec.createQRCodeContent(content, config.type) == null) {
+            Toast.makeText(this, "Content is too long to create QR code", Toast.LENGTH_SHORT).show()
+            return
+        }
         val title = getHistoryTitle(values, content)
         saveHistoryAndOpenResult(title, content)
     }

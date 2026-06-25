@@ -13,6 +13,7 @@ import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.CreateFragmentBinding
 import androidx.core.content.edit
+import com.swx.dongzhou.MainActivity
 
 class CreateFragment: BaseFragment<CreateFragmentBinding>(CreateFragmentBinding::inflate) {
 
@@ -39,6 +40,9 @@ class CreateFragment: BaseFragment<CreateFragmentBinding>(CreateFragmentBinding:
 
         binding.layoutClipboardEntry.setOnClickListener {
             openTextCreateActivity()
+        }
+        binding.layoutHistoryEntry.setOnClickListener {
+            (activity as MainActivity).showFragment("history")
         }
     }
 

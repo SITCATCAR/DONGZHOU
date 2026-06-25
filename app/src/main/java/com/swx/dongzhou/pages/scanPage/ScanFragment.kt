@@ -35,6 +35,7 @@ import com.swx.dongzhou.BaseFragment
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.R
+import com.swx.dongzhou.Util.QRCodeTextCodec
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.databinding.ScanFragmentBinding
 import kotlinx.coroutines.Dispatchers
@@ -388,12 +389,18 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
             return
         }
 
+        val decodedValue = QRCodeTextCodec.decodeQRCodeContent(value)
+        val qrCodeType = if (QRCodeTextCodec.isCompressedText(value)) {
+            QRCodeType.Text
+        } else {
+            getQRCodeType(barcode)
+        }
         val history = History(
-            title = value.take(30).ifBlank { "Scan Result" },
-            content = value,
-            type = getQRCodeType(barcode)
+            title = decodedValue.take(30).ifBlank { "Scan Result" },
+            content = decodedValue,
+            type = qrCodeType
         )
-        saveScanHistory(history)
+        saveScanHistory(history, value)
     }
 
     private fun showScanFailedDialog(){
@@ -420,13 +427,13 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         return value == lastScanValue && now - lastScanTime < SCAN_DEBOUNCE_TIME
     }
 
-    private fun saveScanHistory(history: History) {
+    private fun saveScanHistory(history: History, rawValue: String) {
         lifecycleScope.launch {
             try {
                 val historyId = withContext(Dispatchers.IO) {
                     HistoryDatabase.getDatabase(requireContext()).HistoryDao().insert(history)
                 }
-                lastScanValue = history.content
+                lastScanValue = rawValue
                 lastScanTime = System.currentTimeMillis()
                 Toast.makeText(requireContext(), "Scan saved", Toast.LENGTH_SHORT).show()
                 val intent = Intent(requireContext(), ScanResultActivity::class.java).apply {

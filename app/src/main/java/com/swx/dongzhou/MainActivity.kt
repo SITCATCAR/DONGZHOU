@@ -61,7 +61,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         binding.bottomBar.bottomSetting.setOnClickListener { showFragment(TAG_SETTING) }
     }
 
-    private fun showFragment(tag: String) {
+    open fun showFragment(tag: String) {
         val targetFragment = getOrCreateFragment(tag)
         setBottomBarIcon(tag)
         val tx = supportFragmentManager.beginTransaction()

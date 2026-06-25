@@ -12,6 +12,7 @@ import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.R
 import com.swx.dongzhou.Util.ImageSaver
 import com.swx.dongzhou.Util.QRCodeGenerator
+import com.swx.dongzhou.Util.QRCodeTextCodec
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.Util.Utils
 import com.swx.dongzhou.databinding.ActivityCreateResultBinding
@@ -78,8 +79,17 @@ class CreateResultActivity : BaseActivity<ActivityCreateResultBinding>(
     private fun showQRCode() {
         val content = intent.getStringExtra("content")?:""
         lifecycleScope.launch {
-            bitmap = QRCodeGenerator.generateQRCode(content)!!
-            binding.qrCodeHolder.setImageBitmap(bitmap)
+            val qrCodeContent = QRCodeTextCodec.createQRCodeContent(content, type)
+            val qrBitmap = qrCodeContent?.let { value ->
+                QRCodeGenerator.generateQRCode(value)
+            }
+            if (qrBitmap == null) {
+                Toast.makeText(this@CreateResultActivity, "Content is too long to create QR code", Toast.LENGTH_SHORT).show()
+                finish()
+                return@launch
+            }
+            bitmap = qrBitmap
+            binding.qrCodeHolder.setImageBitmap(qrBitmap)
         }
     }
 

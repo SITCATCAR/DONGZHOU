@@ -13,6 +13,7 @@ import com.swx.dongzhou.BaseActivity
 import com.swx.dongzhou.HistoryDatabase.History
 import com.swx.dongzhou.HistoryDatabase.HistoryDatabase
 import com.swx.dongzhou.R
+import com.swx.dongzhou.Util.QRCodeTextCodec
 import com.swx.dongzhou.Util.QRCodeType
 import com.swx.dongzhou.Util.Utils
 import com.swx.dongzhou.databinding.ActivityScanResultBinding
@@ -29,10 +30,14 @@ class ScanResultActivity : BaseActivity<ActivityScanResultBinding>(
     private var isFavorite = false
 
     override fun initData() {
-        content = intent.getStringExtra(EXTRA_SCAN_RESULT).orEmpty()
+        val scanResult = intent.getStringExtra(EXTRA_SCAN_RESULT).orEmpty()
+        content = QRCodeTextCodec.decodeQRCodeContent(scanResult)
         type = runCatching {
             QRCodeType.valueOf(intent.getStringExtra(EXTRA_SCAN_TYPE).orEmpty())
         }.getOrDefault(QRCodeType.Text)
+        if (QRCodeTextCodec.isCompressedText(scanResult)) {
+            type = QRCodeType.Text
+        }
         historyId = intent.getLongExtra(EXTRA_HISTORY_ID, -1L)
     }
 
