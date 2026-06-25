@@ -13,4 +13,5 @@
     <color name="setting_switch_off">#ECECEC</color>
     <color name="setting_switch_on_track">#1C558E</color>
     <color name="setting_switch_on_thumb">#0188FE</color>
+    <color name="create_unable_button">#134B7F</color>
 </resources>

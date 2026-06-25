@@ -373,6 +373,7 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         if (barcode == null) {
             if (showNoResultToast) {
                 Toast.makeText(requireContext(), "No barcode found", Toast.LENGTH_SHORT).show()
+                showScanFailedDialog()
             }
             isScanning = false
             return
@@ -381,6 +382,7 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
         if (value.isBlank() || shouldIgnoreSameScan(value)) {
             if (showNoResultToast) {
                 Toast.makeText(requireContext(), "No barcode found", Toast.LENGTH_SHORT).show()
+                showScanFailedDialog()
             }
             isScanning = false
             return
@@ -392,6 +394,25 @@ class ScanFragment : BaseFragment<ScanFragmentBinding>(ScanFragmentBinding::infl
             type = getQRCodeType(barcode)
         )
         saveScanHistory(history)
+    }
+
+    private fun showScanFailedDialog(){
+        val dview = layoutInflater.inflate(R.layout.scan_failed_dialog, null)
+        val dialog= Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(dview)
+
+        dialog.findViewById<TextView>(R.id.dialog_no).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.findViewById<TextView>(R.id.dialog_yes).setOnClickListener {
+            dialog.dismiss()
+            pickImageLauncher.launch("image/*")
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(resources.displayMetrics.widthPixels - dp(40), ViewGroup.LayoutParams.WRAP_CONTENT)
+
     }
 
     private fun shouldIgnoreSameScan(value: String): Boolean {
